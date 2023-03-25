@@ -1,0 +1,31 @@
+{
+  "name": "lwu-request",
+  "version": "1.0.0",
+  "description": "基于uniapp网络请求API封装的轻量级网络请求库，支持自动刷新token，请求拦截，请求中断，自动重试等特性",
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [
+    "网络请求",
+    "uniapp",
+    "请求拦截",
+    "请求中断",
+    "刷新token",
+    "lwu-request"
+  ],
+  "author": "kviewui@163.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@dcloudio/types": "^3.2.11",
+    "@types/node": "^18.15.8",
+    "@types/qs": "^6.9.7"
+  },
+  "dependencies": {
+    "qs": "^6.11.1"
+  }
+}
