@@ -27,5 +27,12 @@
   },
   "dependencies": {
     "qs": "^6.11.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kviewui/lwu-request"
+  },
+  "bugs": {
+    "url": "https://github.com/kviewui/lwu-request/issues"
   }
 }
