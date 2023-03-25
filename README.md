@@ -9,7 +9,7 @@
 
 	> 指数退避算法简介
 	为了解决如何设置适当的重传等待时间而存在的算法，基本流程如下：
-	1.客户端发起请求
+	1.客户端发起请求<br/>
 	2.请求失败，等待1 + random_number_milliseconds秒后重试请求。
 	3.请求失败，等待2 + random_number_milliseconds秒后重试请求。
 	4.请求失败，等待4 + random_number_milliseconds秒后重试请求。
