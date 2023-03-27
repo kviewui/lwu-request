@@ -1,5 +1,5 @@
 import { loading } from './utils/prompt';
-import qs from 'qs';
+// import qs from 'qs';
 import type { Config } from './types/config';
 import { useConfig } from './utils/config';
 import type { RequestOptions } from './types/request';
@@ -144,24 +144,44 @@ export class Http {
 
                 let reqUrl = `${baseURI}${url}`;
                 if (args.method === 'GET') {
-                    args.data = qs.stringify(args.data);
+                    args.data = this.config.buildQueryString && this.config.buildQueryString(args.data)
+                        ? this.config.buildQueryString(args.data)
+                        : new URLSearchParams(Object.entries(args.data)).toString();
                     args.url = `${reqUrl}?${args.data}`;
                 } else {
                     args.url = reqUrl;
                 }
 
                 // 判断是否存在token，如果存在则在请求头统一添加token，token获取从config配置获取
-                const token = uni.getStorageSync(this.config.tokenStorageKeyName as string);
+                let token = uni.getStorageSync(this.config.tokenStorageKeyName as string);
 
-                if (token) {
+                console.warn(`token 测试：${token}`);
+
+                const setToken = () => {
+                    return new Promise((resolve, _) => {
+                        token && resolve(token);
+
+                        console.warn(`token 测试1：${token}`);
+
+                        this.config.tokenValue && this.config.tokenValue().then(res => {
+                            console.warn(`token 测试2：${res}`);
+
+                            res && resolve(res);
+                        })
+                    });
+                }
+
+                setToken().then(getToken => {
+                    console.warn(`token 测试3：${token}`);
+
                     if (this.config.takeTokenMethod === 'header') {
-                        args.header[this.config.takenTokenKeyName as string] = token;
+                        args.header[this.config.takenTokenKeyName as string] = getToken;
                     }
 
                     if (this,this.config.takeTokenMethod === 'body') {
-                        args.data[this.config.takenTokenKeyName as string] = token;
+                        args.data[this.config.takenTokenKeyName as string] = getToken;
                     }
-                }
+                });
 
                 // 请求前自定义拦截
                 if (before) {

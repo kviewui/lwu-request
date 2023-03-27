@@ -6,5 +6,7 @@ export const tsup: Options = {
     dts: true,
     splitting: true,
     clean: true,
-    legacyOutput: true
+    legacyOutput: true,
+    treeshake: false,
+    minify: false
 };

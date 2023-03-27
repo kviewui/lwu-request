@@ -23,9 +23,6 @@ var loading = (params) => {
   });
 };
 
-// src/http.ts
-import qs from "qs";
-
 // src/utils/config.ts
 var useConfig = (config) => {
   var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t;
@@ -94,6 +91,35 @@ var useConfig = (config) => {
      */
     tokenStorageKeyName: (_l = config.tokenStorageKeyName) != null ? _l : "",
     /**
+     * 自定义获取token处理程序，通过promise返回最新token值即可
+     * + `1.0.2` 及以上版本支持
+     * @returns 
+     * @example
+     * ```ts
+     * tokenValue: () => {
+     *      return new Promise((resolve, _) => {
+     *          // 获取最新token演示
+     *          const token = getToken();
+     *          token && resolve(token);
+     *      });
+     * }
+     * ```
+     */
+    tokenValue: config.tokenValue,
+    /**
+     * 自定义构建URL参数方式，即用什么方式把请求的params对象数据转为`a=1&b=2`的格式，默认使用NodeJS内置对象 `URLSearchParams` 转化，可以自定义通过 `qs` 插件的方式转化
+     * + `1.0.2` 及以上版本支持
+     * 
+     * @example
+     * ```ts
+     * // qs 插件转化示例
+     * import qs from 'qs';
+     * 
+     * return qs.stringify(obj);
+     * ```
+     */
+    buildQueryString: config.buildQueryString,
+    /**
      * 请求携带token的方式，有效值：header、body
      */
     takeTokenMethod: (_m = config.takeTokenMethod) != null ? _m : "header",
@@ -109,14 +135,6 @@ var useConfig = (config) => {
      * 自动刷新token程序，返回promise，`autoRefreshToken` 为 `true`时生效
      */
     refreshTokenHandle: config.refreshTokenHandle,
-    // /**
-    //  * 请求refreshToken设置，一般是获取token接口返回的用来刷新token的凭证
-    //  */
-    // refreshToken: config.refreshToken ?? '',
-    // /**
-    //  * 请求refreshToken的API地址
-    //  */
-    // refreshTokenApiUrl: config.refreshTokenApiUrl ?? '',
     /**
      * 自定义token失效的错误代码，便于请求库内部做自动刷新token判断
      */
@@ -237,7 +255,7 @@ var Http = class {
       invoke: (args) => {
         var _a, _b;
         if (this.config.debug) {
-          console.warn(`\u3010LwuRequest Debug:\u8BF7\u6C42\u62E6\u622A\u3011${JSON.stringify(args)}`);
+          console.warn(`\u3010LwuRequest Debug:\u8BF7\u6C42\u62E6\u622A111\u3011${JSON.stringify(args)}`);
         }
         if (this.config.loading) {
           loading({ title: (_a = this.config.loadingText) != null ? _a : "\u8BF7\u6C42\u4E2D..." });
@@ -256,20 +274,32 @@ var Http = class {
         }
         let reqUrl = `${baseURI}${url}`;
         if (args.method === "GET") {
-          args.data = qs.stringify(args.data);
+          args.data = this.config.buildQueryString && this.config.buildQueryString(args.data) ? this.config.buildQueryString(args.data) : new URLSearchParams(Object.entries(args.data)).toString();
           args.url = `${reqUrl}?${args.data}`;
         } else {
           args.url = reqUrl;
         }
-        const token = uni.getStorageSync(this.config.tokenStorageKeyName);
-        if (token) {
+        let token = uni.getStorageSync(this.config.tokenStorageKeyName);
+        console.warn(`token \u6D4B\u8BD5\uFF1A${token}`);
+        const setToken = () => {
+          return new Promise((resolve, _) => {
+            token && resolve(token);
+            console.warn(`token \u6D4B\u8BD51\uFF1A${token}`);
+            this.config.tokenValue && this.config.tokenValue().then((res) => {
+              console.warn(`token \u6D4B\u8BD52\uFF1A${res}`);
+              res && resolve(res);
+            });
+          });
+        };
+        setToken().then((getToken) => {
+          console.warn(`token \u6D4B\u8BD53\uFF1A${token}`);
           if (this.config.takeTokenMethod === "header") {
-            args.header[this.config.takenTokenKeyName] = token;
+            args.header[this.config.takenTokenKeyName] = getToken;
           }
           if (this, this.config.takeTokenMethod === "body") {
-            args.data[this.config.takenTokenKeyName] = token;
+            args.data[this.config.takenTokenKeyName] = getToken;
           }
-        }
+        });
         if (before) {
           before();
         }

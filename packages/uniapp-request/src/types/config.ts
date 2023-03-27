@@ -71,6 +71,25 @@ export interface Config {
      */
     tokenStorageKeyName?: string;
     /**
+     * 自定义获取token处理程序，通过promise返回最新token值即可
+     * + `1.0.2` 及以上版本支持
+     * @returns 
+     */
+    tokenValue?: () => Promise<unknown>;
+    /**
+     * 自定义构建URL参数方式，即用什么方式把请求的params对象数据转为`a=1&b=2`的格式，默认使用NodeJS内置对象 `URLSearchParams` 转化，可以自定义通过 `qs` 插件的方式转化
+     * + `1.0.2` 及以上版本支持
+     * 
+     * @example
+     * ```ts
+     * // qs 插件转化示例
+     * import qs from 'qs';
+     * 
+     * return qs.stringify(obj);
+     * ```
+     */
+    buildQueryString?: (obj: object) => string;
+    /**
      * 请求携带token的方式，有效值：`header`、`body`
      */
     takeTokenMethod?: 'header' | 'body';
@@ -86,14 +105,6 @@ export interface Config {
      * 自动刷新token程序，返回promise，`autoRefreshToken` 为 `true`时生效
      */
     refreshTokenHandle?: () => Promise<unknown>;
-    // /**
-    //  * 请求refreshToken设置，一般是获取token接口返回的用来刷新token的凭证
-    //  */
-    // refreshToken?: string;
-    // /**
-    //  * 请求refreshToken的API地址
-    //  */
-    // refreshTokenApiUrl?: string;
     /**
      * 自定义token失效的错误代码，便于请求库内部做自动刷新token判断
      */
