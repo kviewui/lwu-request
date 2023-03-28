@@ -173,6 +173,34 @@ request.abort();
 request.abort('user-info-1-1679735369814');
 ```
 
+#### 自动携带请求token示例
++ 增加配置，示例中以 `body` 方式为例
+```ts
+{
+	// 省略已有配置内容
+	...,
+	/**
+     * 请求携带token的方式，有效值：`header`、`body`，`header` 方式时需要注意后端开启对应的header跨域白名单
+     */
+	takeTokenMethod: 'body',
+	/**
+     * 请求携带token的字段名称，header方式默认为 `Authorization`
+     */
+	takenTokenKeyName: 'user_token',
+	/**
+     * 自定义获取token处理程序，通过promise返回最新token值即可
+     * + `1.0.2` 及以上版本支持
+     */
+	tokenValue: () => {
+		return new Promise((resolve, _) => {
+			// 此处仅作为获取最新token的演示
+			const token = Oauth.get(Oauth).userToken;
+			token && resolve(token);
+		});
+	},
+}
+```
+
 ### 请求完整配置
 #### 默认配置内容
 ```ts

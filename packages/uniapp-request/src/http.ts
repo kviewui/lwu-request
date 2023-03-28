@@ -19,8 +19,8 @@ import type { RequestOptions } from './types/request';
  * 上述的random_number_milliseconds为1到1000的随机毫秒数
  */
 const makeRetryTimeout = (times: number, maximum_offretry: number): number => {
-	const random_number_milliseconds = Math.floor(Math.random() * 1000);
-	return Math.min(Math.pow(2, times) * 1000 + random_number_milliseconds, maximum_offretry);
+    const random_number_milliseconds = Math.floor(Math.random() * 1000);
+    return Math.min(Math.pow(2, times) * 1000 + random_number_milliseconds, maximum_offretry);
 }
 
 /**
@@ -32,9 +32,9 @@ export class Http {
      * 当前请求任务
      */
     private currentRequestTask: UniApp.RequestTask = {
-        abort: () => {},
-        onHeadersReceived: () => {},
-        offHeadersReceived: () => {}
+        abort: () => { },
+        onHeadersReceived: () => { },
+        offHeadersReceived: () => { }
     };
     private requestTasksName = 'LWU-REQUEST-TASKS';
     /**
@@ -75,7 +75,7 @@ export class Http {
          * @param errMsg 
          * @returns 
          */
-        errorHandleByCode: (code: number, errMsg?: string) => {}
+        errorHandleByCode: (code: number, errMsg?: string) => { }
     };
 
     constructor(config: Config) {
@@ -90,7 +90,7 @@ export class Http {
                 this.retryMaximum = (this.config.retryMaximum as number) * 1000;
                 this.retryTimeout = [];
                 this.retryDeadline = config.retryDeadline as number;
-                
+
                 for (let i = 0; i < this.retryCount; i++) {
                     if (this.retryDeadline < 0) {
                         break;
@@ -134,10 +134,9 @@ export class Http {
 
                 // 拼接baseURI
                 let baseURI: string = '';
-                let debug: boolean = false;
                 if (process.env.NODE_ENV === 'development') {
                     baseURI = this.config.baseUrl.dev;
-                    debug = this.config.debug as boolean;
+                    // debug = this.config.debug as boolean;
                 } else {
                     baseURI = this.config.baseUrl.pro;
                 }
@@ -152,37 +151,6 @@ export class Http {
                     args.url = reqUrl;
                 }
 
-                // 判断是否存在token，如果存在则在请求头统一添加token，token获取从config配置获取
-                let token = uni.getStorageSync(this.config.tokenStorageKeyName as string);
-
-                console.warn(`token 测试：${token}`);
-
-                const setToken = () => {
-                    return new Promise((resolve, _) => {
-                        token && resolve(token);
-
-                        console.warn(`token 测试1：${token}`);
-
-                        this.config.tokenValue && this.config.tokenValue().then(res => {
-                            console.warn(`token 测试2：${res}`);
-
-                            res && resolve(res);
-                        })
-                    });
-                }
-
-                setToken().then(getToken => {
-                    console.warn(`token 测试3：${token}`);
-
-                    if (this.config.takeTokenMethod === 'header') {
-                        args.header[this.config.takenTokenKeyName as string] = getToken;
-                    }
-
-                    if (this,this.config.takeTokenMethod === 'body') {
-                        args.data[this.config.takenTokenKeyName as string] = getToken;
-                    }
-                });
-
                 // 请求前自定义拦截
                 if (before) {
                     before();
@@ -194,7 +162,7 @@ export class Http {
 
                 if (this.config.debug) {
                     console.warn(`【LwuRequest Debug:响应拦截】${JSON.stringify(args)}`);
-                }   
+                }
 
                 if (after) {
                     after();
@@ -233,7 +201,7 @@ export class Http {
         }
     }
 
-    public request(url: string, data: object = {}, options: RequestOptions = {
+    public request(url: string, data: any = {}, options: RequestOptions = {
         header: {},
         method: this.config.method,
         timeout: this.config.timeout,
@@ -258,53 +226,89 @@ export class Http {
         return new Promise((resolve, reject) => {
             // 拦截器
             this.interceptor(url, options.before, options.after);
-            // 发起请求
-            this.currentRequestTask = uni.request({
-                url: url,
-                data: data,
-                header: options.header,
-                method: options.method,
-                timeout: options.timeout,
-                dataType: options.dataType,
-                responseType: options.responseType,
-                sslVerify: options.sslVerify,
-                withCredentials: options.withCredentials,
-                firstIpv4: options.firstIpv4,
-                success: (res: UniApp.RequestSuccessCallbackResult) => {
-                    if (res.statusCode !== this.config.tokenExpiredCode) {
-                        resolve(res.data);
-                    } else {
-                        // 刷新token
-                        this.refreshToken();
-                        uni.setStorageSync('LWU-REQUEST-CALLBACK', () => {
-                            resolve(this.request(url, data, options));
-                        });
-                    }
-                },
-                fail: (err: UniApp.GeneralCallbackResult) => {
-                    this.retryCount = options.retryCount ?? 3;
+            let header: any = {};
 
-                    if (this.retryCount === 0) {
-                        reject(err);
+            // 判断是否存在token，如果存在则在请求头统一添加token，token获取从config配置获取
+            let token = uni.getStorageSync(this.config.tokenStorageKeyName as string);
+
+            const setToken = () => {
+                return new Promise((resolve, _) => {
+                    token && resolve(token);
+
+                    if (this.config.tokenValue) {
+                        this.config.tokenValue().then(res => {    
+                            res && resolve(res);
+                        })
                     } else {
-                        if (this.config.debug) {
-                            console.warn(`【LwuRequest Debug】自动重试次数：${this.retryCount}`);
-                        }
-                        this.retryCount--;
-                        setTimeout(this.request, this.retryTimeout.shift());
-                        // 网络异常或者断网处理
-                        this.config.networkExceptionHandle && this.config.networkExceptionHandle();
+                        resolve('');
+                    }
+                });
+            }
+
+            setToken().then(getToken => {
+                if (getToken) {
+                    if (this.config.takeTokenMethod === 'header') {
+                        header[this.config.takenTokenKeyName as string] = getToken;
+                    }
+
+                    if (this.config.takeTokenMethod === 'body') {
+                        data[this.config.takenTokenKeyName as string] = getToken;
                     }
                 }
-            });
 
-            // 判断是否设置请求队列ID
-            if (options?.task_id) {
-                // 当前请求存入缓存
-                let tasks: UniApp.RequestTask[] = [];
-                tasks[options?.task_id as any] = this.currentRequestTask;
-                uni.setStorageSync(this.requestTasksName, tasks);
-            }
+                let reqHeader = {
+                    header,
+                    ...options.header
+                };
+
+                // 发起请求
+                this.currentRequestTask = uni.request({
+                    url: url,
+                    data: data,
+                    header: reqHeader.header,
+                    method: options.method,
+                    timeout: options.timeout,
+                    dataType: options.dataType,
+                    responseType: options.responseType,
+                    sslVerify: options.sslVerify,
+                    withCredentials: options.withCredentials,
+                    firstIpv4: options.firstIpv4,
+                    success: (res: UniApp.RequestSuccessCallbackResult) => {
+                        if (res.statusCode !== this.config.tokenExpiredCode) {
+                            resolve(res.data);
+                        } else {
+                            // 刷新token
+                            this.refreshToken();
+                            uni.setStorageSync('LWU-REQUEST-CALLBACK', () => {
+                                resolve(this.request(url, data, options));
+                            });
+                        }
+                    },
+                    fail: (err: UniApp.GeneralCallbackResult) => {
+                        this.retryCount = options.retryCount ?? 3;
+
+                        if (this.retryCount === 0) {
+                            reject(err);
+                        } else {
+                            if (this.config.debug) {
+                                console.warn(`【LwuRequest Debug】自动重试次数：${this.retryCount}`);
+                            }
+                            this.retryCount--;
+                            setTimeout(this.request, this.retryTimeout.shift());
+                            // 网络异常或者断网处理
+                            this.config.networkExceptionHandle && this.config.networkExceptionHandle();
+                        }
+                    }
+                });
+
+                // 判断是否设置请求队列ID
+                if (options?.task_id) {
+                    // 当前请求存入缓存
+                    let tasks: UniApp.RequestTask[] = [];
+                    tasks[options?.task_id as any] = this.currentRequestTask;
+                    uni.setStorageSync(this.requestTasksName, tasks);
+                }
+            });
         });
     }
 

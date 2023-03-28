@@ -7,6 +7,6 @@ export const tsup: Options = {
     splitting: true,
     clean: true,
     legacyOutput: true,
-    treeshake: false,
-    minify: false
+    treeshake: true,
+    minify: true
 };

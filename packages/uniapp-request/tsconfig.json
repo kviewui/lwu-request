@@ -14,7 +14,6 @@
         "outDir": "dist",
         "types": [
             "@dcloudio/types",
-            "qs",
             "node"
         ],
     },
@@ -24,5 +23,14 @@
     ],
     "exclude": [
         "./dist"
-    ]
+    ],
+    "ts-node": {
+        "compilerOptions": {
+            "module": "CommonJS",
+            "types": [
+                "@dcloudio/types",
+                "node"
+            ]
+        }
+    }
 }

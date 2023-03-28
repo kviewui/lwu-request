@@ -195,7 +195,7 @@ declare class Http {
      * 刷新token处理
      */
     private refreshToken;
-    request(url: string, data?: object, options?: RequestOptions): Promise<unknown>;
+    request(url: string, data?: any, options?: RequestOptions): Promise<unknown>;
     get(url: string, data?: object, options?: RequestOptions): Promise<unknown>;
     post(url: string, data?: object, options?: RequestOptions): Promise<unknown>;
     put(url: string, data?: object, options?: RequestOptions): Promise<unknown>;

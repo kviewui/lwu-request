@@ -8,7 +8,8 @@
   "files": [
     "dist",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "keywords": [
     "网络请求",
@@ -20,6 +21,10 @@
   ],
   "author": "kviewui@163.com",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.com"
+  },
   "devDependencies": {
     "@dcloudio/types": "^3.2.11",
     "@types/node": "^18.15.8"
