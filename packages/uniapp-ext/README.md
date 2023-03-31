@@ -193,9 +193,13 @@ request.abort('user-info-1-1679735369814');
      */
 	tokenValue: () => {
 		return new Promise((resolve, _) => {
-			// 此处仅作为获取最新token的演示
-			const token = Oauth.get(Oauth).userToken;
-			token && resolve(token);
+			// 此处仅作为获取最新token的演示，使用try catch的作用是当没有获取到token时可以给请求库返回 `false`，请求库将会自动不带token往下继续请求。
+			try {
+                const token = Oauth.get(Oauth).userToken;
+			    token && resolve(token);
+            } catch (error) {
+                resolve(false);
+            }
 		});
 	},
 }

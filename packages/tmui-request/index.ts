@@ -607,6 +607,7 @@ class Http {
                     if (this.config.tokenValue) {
                         this.config.tokenValue().then(res => {
                             res && resolve(res);
+                            resolve(false);
                         })
                     } else {
                         resolve('');
