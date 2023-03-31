@@ -236,8 +236,9 @@ export class Http {
                     token && resolve(token);
 
                     if (this.config.tokenValue) {
-                        this.config.tokenValue().then(res => {    
+                        this.config.tokenValue().then(res => {
                             res && resolve(res);
+                            resolve(false);
                         })
                     } else {
                         resolve('');

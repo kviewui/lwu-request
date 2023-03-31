@@ -1,3 +1,6 @@
+## 1.0.3	(2023-03-31)
++ 修复因增加 `tokenValue` 属性后没有 `token` 返回时程序中断的bug，并完善携带token的配置demo。
+
 ## 1.0.2	(2023-03-28)
 + 新增 `tokenValue` 属性，优化旧版本指定token存储key的非人性化方式，`tokenValue` 直接通过自己定义Promise返回最新token即可，示例如下：
 ```
