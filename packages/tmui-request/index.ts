@@ -595,7 +595,7 @@ class Http {
         return new Promise((resolve, reject) => {
             // 拦截器
             this.interceptor(url, options.before, options.after);
-            let header: any = {};
+            // let header: any = {};
 
             // 判断是否存在token，如果存在则在请求头统一添加token，token获取从config配置获取
             let token = uni.getStorageSync(this.config.tokenStorageKeyName as string);
@@ -618,7 +618,7 @@ class Http {
             setToken().then(getToken => {
                 if (getToken) {
                     if (this.config.takeTokenMethod === 'header') {
-                        header[this.config.takenTokenKeyName as string] = getToken;
+                        (options.header as any)[this.config.takenTokenKeyName as string] = getToken;
                     }
 
                     if (this.config.takeTokenMethod === 'body') {
@@ -626,16 +626,14 @@ class Http {
                     }
                 }
 
-                let reqHeader = {
-                    header,
-                    ...options.header
-                };
-
                 // 发起请求
                 this.currentRequestTask = uni.request({
                     url: url,
                     data: data,
-                    header: reqHeader.header,
+                    // header: reqHeader.header,
+                    header: {
+                        ...options.header
+                    },
                     method: options.method,
                     timeout: options.timeout,
                     dataType: options.dataType,
