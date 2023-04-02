@@ -207,4 +207,4 @@ declare class Http {
     abort(task_id?: string): void;
 }
 
-export { Http };
+export { Http, RequestOptions };

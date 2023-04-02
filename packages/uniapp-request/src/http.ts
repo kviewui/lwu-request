@@ -355,3 +355,8 @@ export class Http {
         }
     }
 }
+
+/**
+ * 导出请求配置参数类型
+ */
+export * from './types/request';
