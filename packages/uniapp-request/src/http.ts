@@ -115,7 +115,7 @@ export class Http {
         this.config.errorHandleByCode(code, message);
     }
 
-    private interceptor(url: string, before: Function | undefined, after: Function | undefined) {
+    private interceptor(url: string, before: Function | undefined, after: Function | undefined, header?: object) {
         uni.addInterceptor('request', {
             invoke: (args) => {
                 // 请求前拦截处理
@@ -225,8 +225,8 @@ export class Http {
 
         return new Promise((resolve, reject) => {
             // 拦截器
-            this.interceptor(url, options.before, options.after);
-            let header: any = {};
+            this.interceptor(url, options.before, options.after, options.header);
+            // let header: any = {};
 
             // 判断是否存在token，如果存在则在请求头统一添加token，token获取从config配置获取
             let token = uni.getStorageSync(this.config.tokenStorageKeyName as string);
@@ -249,24 +249,22 @@ export class Http {
             setToken().then(getToken => {
                 if (getToken) {
                     if (this.config.takeTokenMethod === 'header') {
-                        header[this.config.takenTokenKeyName as string] = getToken;
+                        (options.header as any)[this.config.takenTokenKeyName as string] = getToken;
                     }
 
                     if (this.config.takeTokenMethod === 'body') {
                         data[this.config.takenTokenKeyName as string] = getToken;
                     }
                 }
-
-                let reqHeader = {
-                    header,
-                    ...options.header
-                };
-
+				
                 // 发起请求
                 this.currentRequestTask = uni.request({
                     url: url,
                     data: data,
-                    header: reqHeader.header,
+                    // header: reqHeader.header,
+					header: {
+						...options.header
+					},
                     method: options.method,
                     timeout: options.timeout,
                     dataType: options.dataType,
