@@ -224,6 +224,20 @@ const makeRetryTimeout = (times: number, maximum_offretry: number): number => {
 }
 
 /**
+ * 对象转query string的参数字符串
+ * @param obj 需要转化的对象参数
+ */
+const objToQueryString = (obj: object): string => {
+    if (typeof obj === 'object' && obj !== null) {
+        return Object.keys(obj)
+            .map((key) => `${key}=${encodeURIComponent((obj as any)[key])}`)
+            .join('&');
+    }
+
+    return JSON.stringify(obj);
+}
+
+/**
  * 网络请求库封装
  * @public
  */
@@ -512,7 +526,8 @@ class Http {
                 if (args.method === 'GET') {
                     args.data = this.config.buildQueryString && this.config.buildQueryString(args.data)
                         ? this.config.buildQueryString(args.data)
-                        : new URLSearchParams(Object.entries(args.data)).toString();
+                        // : new URLSearchParams(Object.entries(args.data)).toString();
+                        : objToQueryString(args.data);
                     args.url = `${reqUrl}?${args.data}`;
                 } else {
                     args.url = reqUrl;

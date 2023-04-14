@@ -197,6 +197,7 @@ request.abort('user-info-1-1679735369814');
 			try {
                 const token = Oauth.get(Oauth).userToken;
 			    token && resolve(token);
+                resolve('');
             } catch (error) {
                 resolve(false);
             }
