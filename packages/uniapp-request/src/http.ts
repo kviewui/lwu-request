@@ -28,9 +28,13 @@ const makeRetryTimeout = (times: number, maximum_offretry: number): number => {
  * @param obj 需要转化的对象参数
  */
 const objToQueryString = (obj: object): string => {
-    return Object.keys(obj)
-        .map((key) => `${key}=${encodeURIComponent((obj as any)[key])}`)
-        .join('&');
+    if (typeof obj === 'object' && obj !== null) {
+        return Object.keys(obj)
+            .map((key) => `${key}=${encodeURIComponent((obj as any)[key])}`)
+            .join('&');
+    }
+
+    return obj;
 }
 
 /**
