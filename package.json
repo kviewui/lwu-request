@@ -4,7 +4,10 @@
   "description": "基于uniapp网络请求API封装的轻量级网络请求库，支持自动刷新token，请求拦截，请求中断，自动重试等特性",
   "scripts": {
     "build": "cd packages/uniapp-request && tsup --config ./tsup.config.ts",
-    "publish": "cd packages/uniapp-request && npm publish"
+    "publish": "cd packages/uniapp-request && npm publish",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "author": "kviewui@163.com",
   "license": "MIT",
@@ -12,5 +15,8 @@
     "tsup": "^6.7.0",
     "typescript": "^5.0.2"
   },
-  "private":"true"
+  "private": "true",
+  "devDependencies": {
+    "vitepress": "1.0.0-alpha.75"
+  }
 }
