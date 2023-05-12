@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  lang: 'zh-CN',
   title: "LWU-REQUEST",
   description: "基于uniapp网络请求API封装的轻量级网络请求库，支持自动刷新token，请求拦截，请求中断，自动重试等特性",
   themeConfig: {
@@ -10,7 +11,10 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '文档', link: '/intro' }
     ],
-
+    editLink: {
+      pattern: 'https://github.com/kviewui/lwu-request/edit/main/docs/:path',
+      text: '在 GitHub 上编辑此页'
+    },
     sidebar: [
       {
         text: '开发指南',
