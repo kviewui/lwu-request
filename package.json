@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "基于uniapp网络请求API封装的轻量级网络请求库，支持自动刷新token，请求拦截，请求中断，自动重试等特性",
   "scripts": {
-    "build": "cd packages/uniapp-request && tsup --config ./tsup.config.ts",
+    "build:uni": "cd packages/uniapp-request && tsup --config ./tsup.config.ts",
     "publish": "cd packages/uniapp-request && npm publish",
     "docs:dev": "vitepress dev docs --port 5273",
     "docs:build": "vitepress build docs",
