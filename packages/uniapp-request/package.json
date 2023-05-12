@@ -29,6 +29,7 @@
     "@dcloudio/types": "^3.2.11",
     "@types/node": "^18.15.8"
   },
+  "homepage": "https://lwur.fdproxy.cn",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kviewui/lwu-request"
