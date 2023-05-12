@@ -9,10 +9,10 @@ hero:
   actions:
     - theme: brand
       text: 快速上手
-      link: /markdown-examples
+      link: /start
     - theme: alt
       text: 查看源码
-      link: /api-examples
+      link: https://github.com/kviewui/lwu-request
 
 features:
   - icon: 💡

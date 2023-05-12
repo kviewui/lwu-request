@@ -2,32 +2,225 @@
 这里是插件初始化的全局配置内容。
 
 ## baseUrl
-请求域名配置
++ **类型**: `{
+    dev: string;
+    pro: string;
+}`
++ **默认值**: `{dev: '', pro: ''}`
++ **是否必填**: 是
++ **描述**: 请求域名配置
 
 ### dev
 + **类型**：`string`
 + **默认值**: ` `
++ **是否必填**: 是
 + **描述**：开发环境域名
 
 ### pro
 + **类型**：`string`
 + **默认值**: ` `
++ **是否必填**: 是
 + **描述**：生产环境域名
 
 ## debug
 + **类型**：`boolean`
 + **默认值**: `false`
++ **是否必填**: 否
 + **描述**：调试模式，开启后会显示内部调试打印信息
 
 ## loading
 + **类型**：`boolean`
 + **默认值**: `true`
++ **是否必填**: 否
 + **描述**：请求过程是否显示loading
 
 ## loadingText
 + **类型**：`string`
 + **默认值**: `请求中...`
++ **是否必填**: 否
 + **描述**：请求中loading弹窗的提示文本
+
+## errorHandleByCode
++ **类型**: `(code: number, errMsg?: string) => {}`
++ **默认值**: `(code: number, errMsg?: string) => {}`
++ **是否必填**: 否
++ **描述**: 业务错误代码拦截处理程序，请根据业务实际情况灵活设置
++ **示例**: 
+```ts
+errorHandleByCode: (code: number, errMsg?: string) => {
+    // console.log(`【Request Debug:配置】${code}`);
+    if (code === 401) {
+        // 一般为未登录状态，可在这里统一跳转登录页面
+        console.log('401拦截演示');
+        // 此处仅为演示
+        msg({ title: errMsg || '未登录，请先登录' });
+    } else if (code === 403) {
+        // 一般为token过期，可在这里清除token并跳转登录页面处理
+        console.log('403拦截演示');
+        // 此处仅为演示
+        msg({ title: errMsg || '登录过期，请重新登录' });
+    } else if (code === 404) {
+        // 请求不存在
+        console.log('404拦截演示');
+        // 此处仅为演示
+        msg({ title: errMsg || '请求资源不存在' });
+    } else if (code === 500) {
+        console.log('500拦截演示');
+        msg({ title: errMsg || '接口返回错误500' });
+    } else if (code === 502) {
+        console.log('500拦截演示');
+    } else if (code === 503) {
+        console.log('503拦截演示');
+    } else if (code !== 200) {
+        console.log('自定义错误码拦截演示');
+        msg({ title: '请求服务异常' });
+    }
+}
+```
+
+## apiErrorInterception
++ **类型**: `(data: any, args?: UniApp.RequestSuccessCallbackResult) => {}`
++ **默认值**: `(data: any, args?: UniApp.RequestSuccessCallbackResult) => {}`
++ **是否必填**: 否
++ **描述**: 
+    + API错误拦截处理程序，请根据业务实际情况灵活设置。
+    + `1.1.0` 及以上版本支持。
++ **示例**: 
+```ts
+interface Data {
+    code: number;
+}
+apiErrorInterception: (data: Data, args?: UniApp.RequestSuccessCallbackResult) => {
+    if (data.code !== 1) {
+        msg({ title: '请求失败' });
+    }
+}
+```
+
+## networkExceptionHandle
++ **类型**: `() => {}`
++ **默认值**: `() => {}`
++ **是否必填**: 否
++ **描述**: 网络异常或者断网处理程序，建议更新缓存中是否断网或者网络繁忙的标识以便前端页面展示没有网络或者断网的通用异常页面
+
+## requestSuccessResponseMsgName
++ **类型**: `string`
++ **默认值**: `msg`
++ **是否必填**: 否
++ **描述**: 请求成功时接口响应描述信息字段名称
+
+## tokenStorageKeyName
++ **类型**: `string`
++ **默认值**: ` `
++ **是否必填**: 否
++ **描述**: 
+    + 缓存中token字段名称，方便请求库从缓存获取token完成自动填充token。
+    + `1.0.2` 及以上版本已废弃，请使用 `tokenValue` 属性代替。
+
+## tokenValue
++ **类型**: `() => Promise<unknown>`
++ **默认值**: `undefined`;
++ **是否必填**: 否
++ **描述**: 
+    + 自定义获取token处理程序，通过promise返回最新token值即可
+    + `1.0.2` 及以上版本支持
++ **示例**:
+```ts
+tokenValue: () => {
+    return new Promise((resolve, _) => {
+        try {
+            // getToken 为获取token的示例方法，请根据自己的实际业务灵活修改
+            const token = getToken();
+            token && resolve(token);
+            resolve('');
+        } catch (error) {
+            resolve(false);
+        }
+    });
+}
+```
+
+## buildQueryString
++ **类型**: `(obj: object) => string`
++ **默认值**: `() => ''`
++ **是否必填**: 否
++ **描述**
+    + 自定义构建URL参数方式，即用什么方式把请求的params对象数据转为`a=1&b=2`的格式，默认使用NodeJS内置对象 `URLSearchParams` 转化，可以自定义通过 `qs` 插件的方式转化。
+    + `1.0.2` 及以上版本支持。
++ **示例**: 
+```ts
+import qs from 'qs';
+// qs 插件转化示例
+buildQueryString: (params?: object) => {
+    return qs.stringify(params);
+}
+```
+
+## takeTokenMethod
++ **类型**: `'header' | 'body'`
++ **默认值**: `header`
++ **是否必填**: 否
++ **描述**: 请求携带token的方式
+
+## takenTokenKeyName
++ **类型**: `string`
++ **默认值**: `Authorization`
++ **是否必填**: 否
++ **描述**: 
+    + 请求携带token的字段名称。
+    + `takeTokenMethod` 为 `header` 时，需要后端同步支持 `takenTokenKeyName` 的值。
+
+## autoRefreshToken
++ **类型**: `boolean`
++ **默认值**: `false`
++ **是否必填**: 否
++ **描述**: 是否自动刷新token
+
+## refreshTokenHandle
++ **类型**: `() => Promise<unknown>`
++ **默认值**: ` `
++ **是否必填**: 否
++ **描述**: 
+    + 自动刷新token程序，返回promise
+    + `autoRefreshToken` 为 `true`时生效
+
+## tokenExpiredCode
++ **类型**: `number`
++ **默认值**: `403`
++ **是否必填**: 否
++ **描述**: 自定义token失效的错误代码，便于请求库内部做自动刷新token判断
+
+## retry
++ **类型**: `boolean`
++ **默认值**: `false`
++ **是否必填**: 否
++ **描述**: 请求失败是否自动重试
+
+## retryCount
++ **类型**: `number`
++ **默认值**: `3`
++ **是否必填**: 否
++ **描述**: 请求失败自动重试次数
+
+## retryCountAutoOffRetry
++ **类型**: `boolean`
++ **默认值**: `true`
++ **是否必填**: 否
++ **描述**: 
+    + 请求失败重试次数是否自动计算，失败重试次数上限依然是设置的 `retryCount `值。
+    + 根据 [指数退避算法](/intro#支持请求失败自动重试【基于指数退避算法】) 自动计算失败重试次数。
+
+## retryMaximum
++ **类型**: `number`
++ **默认值**: `64`
++ **是否必填**: 否
++ **描述**: 请求失败用来生成重试时间上限（指数退避算法需要），单位秒
+
+## retryDeadline
++ **类型**: `number`
++ **默认值**: `10000`
++ **是否必填**: 否
++ **描述**: 请求失败执行重试时间上限（指数退避算法需要），达到上限后不再重试
 
 ___
 ::: tip
@@ -37,9 +230,46 @@ ___
 ## timeout
 + **类型**：`number`
 + **默认值**: `6000`
++ **是否必填**: 否
 + **描述**：请求超时时间
 
-## 代码演示
+## method
++ **类型**: `'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'CONNECT' | 'HEAD' | 'OPTIONS' | 'TRACE'`
++ **默认值**: `'GET'`
++ **是否必填**: 否
++ **描述**: 请求方式
+
+## dataType
++ **类型**: `string`
++ **默认值**: `'json'`
++ **是否必填**: 否
++ **描述**: 如果设为 json，会对返回的数据进行一次 JSON.parse，非 json 不会进行 JSON.parse
+
+## responseType
++ **类型**: `string`
++ **默认值**: `text`
++ **是否必填**: 否
++ **描述**: 设置响应的数据类型。合法值：`text`、`arraybuffer`
+
+## sslVerify
++ **类型**: `boolean`
++ **默认值**: `true`
++ **是否必填**: 否
++ **描述**: 验证 ssl 证书
+
+## withCredentials
++ **类型**: `boolean`
++ **默认值**: `false`
++ **是否必填**: 否
++ **描述**: 跨域请求时是否携带凭证（cookies）
+
+## firstIpv4
++ **类型**: `boolean`
++ **默认值**: `false`
++ **是否必填**: 否
++ **描述**: DNS解析时优先使用ipv4
+
+## 完整配置代码演示
 ```ts
 {
 	baseUrl: {

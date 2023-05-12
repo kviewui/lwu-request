@@ -17,6 +17,7 @@ export default defineConfig({
         items: [
           { text: '介绍', link: '/intro' },
           { text: '快速上手', link: '/start' },
+          { text: '更新日志', link: '/changelog' }
           // { text: '请求示例', link: '/examples' }
         ]
       },
@@ -51,7 +52,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
+      { icon: 'github', link: 'https://github.com/kviewui/lwu-request' }
     ]
   }
 })
