@@ -89,7 +89,12 @@ export class Http {
          * @param errMsg 
          * @returns 
          */
-        errorHandleByCode: (code: number, errMsg?: string) => { }
+        errorHandleByCode: (code: number, errMsg?: string) => { },
+        /**
+         * API错误拦截处理程序，请根据业务实际情况灵活设置
+         * @param data 
+         */
+        apiErrorInterception: (data: any) => {},
     };
 
     constructor(config: Config) {
@@ -126,7 +131,7 @@ export class Http {
      */
     private handleError(code: number, message: string = ''): void {
         // 调用错误状态码处理程序
-        this.config.errorHandleByCode(code, message);
+        this.config.errorHandleByCode && this.config.errorHandleByCode(code, message);
     }
 
     private interceptor(url: string, before: Function | undefined, after: Function | undefined, header?: object) {
@@ -174,6 +179,8 @@ export class Http {
             // 响应拦截
             success: (args: UniApp.RequestSuccessCallbackResult) => {
                 this.handleError(args.statusCode, (args.data as AnyObject)[this.config.requestSuccessResponseMsgName as string]);
+
+                this.config.apiErrorInterception && this.config.apiErrorInterception(args.data, args);
 
                 if (this.config.debug) {
                     console.warn(`【LwuRequest Debug:响应拦截】${JSON.stringify(args)}`);

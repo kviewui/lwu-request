@@ -58,6 +58,10 @@ export const useConfig = (config: Config) => {
          */
         errorHandleByCode: config.errorHandleByCode,
         /**
+         * API错误拦截处理程序，请根据实际情况灵活设置
+         */
+        apiErrorInterception: config.apiErrorInterception,
+        /**
          * 网络异常或者断网处理程序，建议更新缓存中是否断网或者网络繁忙的标识以便前端页面展示没有网络或者断网的通用异常页面
          * @returns
          */

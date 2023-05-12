@@ -5,7 +5,7 @@
   "scripts": {
     "build": "cd packages/uniapp-request && tsup --config ./tsup.config.ts",
     "publish": "cd packages/uniapp-request && npm publish",
-    "docs:dev": "vitepress dev docs",
+    "docs:dev": "vitepress dev docs --port 5273",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs"
   },
