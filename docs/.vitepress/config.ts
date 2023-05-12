@@ -33,7 +33,9 @@ export default defineConfig({
           { text: 'put', link: '/api/put' },
           { text: 'delete', link: '/api/delete' },
           { text: 'request', link: '/api/request' },
-          { text: 'abort', link: '/api/abort' }
+          { text: 'abort', link: '/api/abort' },
+          { text: 'upload', link: '/api/upload' },
+          { text: 'download', link: '/api/download' }
         ]
       },
       {
