@@ -113,6 +113,14 @@ export interface RequestOptionsConfig {
      */
     errorHandleByCode?: (code: number, errMsg?: string) => void;
     /**
+     * API错误拦截处理程序，请根据业务实际情况灵活设置
+     * + `1.1.0` 及以上版本支持
+     * 
+     * @param data API返回内容
+     * @param args uniapp请求API回调结果
+     */
+    apiErrorInterception?: (data: any, args?: UniApp.RequestSuccessCallbackResult) => void;
+    /**
      * 网络异常或者断网处理程序，建议更新缓存中是否断网或者网络繁忙的标识以便前端页面展示没有网络或者断网的通用异常页面
      * @returns
      */
@@ -369,6 +377,12 @@ class Http {
              */
             errorHandleByCode: config.errorHandleByCode,
             /**
+             * API错误拦截处理程序，请根据业务实际情况灵活设置
+             * @param data API返回内容
+             * @param args uniapp请求API回调结果
+             */
+            apiErrorInterception: config.apiErrorInterception,
+            /**
              * 网络异常或者断网处理程序，建议更新缓存中是否断网或者网络繁忙的标识以便前端页面展示没有网络或者断网的通用异常页面
              * @returns
              */
@@ -541,6 +555,8 @@ class Http {
             // 响应拦截
             success: (args: UniApp.RequestSuccessCallbackResult) => {
                 this.handleError(args.statusCode, (args.data as AnyObject)[this.config.requestSuccessResponseMsgName as string]);
+
+                this.config.apiErrorInterception && this.config.apiErrorInterception(args.data, args);
 
                 if (this.config.debug) {
                     console.warn(`【LwuRequest Debug:响应拦截】${JSON.stringify(args)}`);
