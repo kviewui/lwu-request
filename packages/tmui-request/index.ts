@@ -249,7 +249,7 @@ const objToQueryString = (obj: object): string => {
  * 网络请求库封装
  * @public
  */
-class Http {
+export class Http {
     /**
      * 当前请求任务
      */
@@ -753,5 +753,3 @@ class Http {
         }
     }
 }
-
-export default new Http;

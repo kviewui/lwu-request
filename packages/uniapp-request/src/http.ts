@@ -271,7 +271,8 @@ export class Http {
             setToken().then(getToken => {
                 if (getToken) {
                     if (this.config.takeTokenMethod === 'header') {
-                        (options.header as any)[this.config.takenTokenKeyName as string] = getToken;
+                        options.header = options.header ?? {};
+                        (options.header as any)[this.config?.takenTokenKeyName as string] = getToken;
                     }
 
                     if (this.config.takeTokenMethod === 'body') {
