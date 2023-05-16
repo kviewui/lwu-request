@@ -95,6 +95,7 @@ const request = new Http({
 
 			export default user;
 
+			// 该类型导出为可选内容
 			export interface User {
 				user: {
 					info: (data: object, options: object) => Promise<unknown>
