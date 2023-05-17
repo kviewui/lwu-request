@@ -122,6 +122,8 @@ export class Http {
                 this.retryCount = this.retryTimeout.length;
             }
         }
+
+        
     }
 
     /**
@@ -189,17 +191,23 @@ export class Http {
                 if (after) {
                     after();
                 }
+
+                uni.removeInterceptor('request');
             },
             fail: (err: UniApp.GeneralCallbackResult) => {
                 if (this.config.debug) {
                     console.warn(`【LwuRequest Debug:请求拦截失败】${JSON.stringify(err)}`);
                 }
+
+                uni.removeInterceptor('request');
             },
             complete: (res: UniApp.GeneralCallbackResult) => {
                 uni.hideLoading();
                 if (this.config.debug) {
                     console.warn(`【LwuRequest Debug:请求拦截完成】${JSON.stringify(res)}`);
                 }
+
+                uni.removeInterceptor('request');
             }
         });
     }
@@ -320,6 +328,9 @@ export class Http {
                             // 网络异常或者断网处理
                             this.config.networkExceptionHandle && this.config.networkExceptionHandle();
                         }
+                    },
+                    complete: () => {
+                        uni.removeInterceptor('request');
                     }
                 });
 
