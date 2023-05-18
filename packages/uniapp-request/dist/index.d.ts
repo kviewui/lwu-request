@@ -196,7 +196,6 @@ declare class Http {
      * @param message - 自定义错误信息
      */
     private handleError;
-    private interceptor;
     /**
      * 刷新token处理
      */

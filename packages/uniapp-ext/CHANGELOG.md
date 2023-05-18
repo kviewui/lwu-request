@@ -1,3 +1,6 @@
+## 1.1.13	(2023-05-18)
++ 修复多个GET请求时请求冲突问题。[详情](https://github.com/kviewui/lwu-request/issues/3)
+
 ## 1.1.12	(2023-05-17)
 + 优化 	`apiErrorInterception` 重复执行问题。
 

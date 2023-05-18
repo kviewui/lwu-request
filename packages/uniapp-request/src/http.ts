@@ -1,8 +1,7 @@
-import { loading } from './utils/prompt';
+import { loading, useConfig, interceptor } from './utils';
 // import qs from 'qs';
-import type { Config } from './types/config';
-import { useConfig } from './utils/config';
-import type { RequestOptions } from './types/request';
+import type { Config, RequestOptions } from './types';
+import { after, before } from 'node:test';
 
 /**
  * @param {number} times 重试次数
@@ -94,7 +93,7 @@ export class Http {
          * API错误拦截处理程序，请根据业务实际情况灵活设置
          * @param data 
          */
-        apiErrorInterception: (data: any) => {},
+        apiErrorInterception: (data: any) => { },
     };
 
     constructor(config: Config) {
@@ -123,7 +122,7 @@ export class Http {
             }
         }
 
-        
+
     }
 
     /**
@@ -134,82 +133,6 @@ export class Http {
     private handleError(code: number, message: string = ''): void {
         // 调用错误状态码处理程序
         this.config.errorHandleByCode && this.config.errorHandleByCode(code, message);
-    }
-
-    private interceptor(url: string, before: Function | undefined, after: Function | undefined, header?: object) {
-        uni.addInterceptor('request', {
-            invoke: (args) => {
-                // 请求前拦截处理
-                if (this.config.debug) {
-                    console.warn(`【LwuRequest Debug:请求拦截】${JSON.stringify(args)}`);
-                }
-
-                if (this.config.loading) {
-                    loading({ title: this.config.loadingText ?? '请求中...' });
-                }
-
-                if (args?.header?.contentType) {
-                    args.header['content-type'] = args.header.contentType;
-                    delete args.header.contentType;
-                }
-
-                // 拼接baseURI
-                let baseURI: string = '';
-                if (process.env.NODE_ENV === 'development') {
-                    baseURI = this.config.baseUrl.dev;
-                    // debug = this.config.debug as boolean;
-                } else {
-                    baseURI = this.config.baseUrl.pro;
-                }
-
-                let reqUrl = `${baseURI}${url}`;
-                if (args.method === 'GET') {
-                    args.data = this.config.buildQueryString && this.config.buildQueryString(args.data)
-                        ? this.config.buildQueryString(args.data)
-                        // : new URLSearchParams(Object.entries(args.data)).toString();
-                        : objToQueryString(args.data);
-                    args.url = `${reqUrl}?${args.data}`;
-                } else {
-                    args.url = reqUrl;
-                }
-
-                // 请求前自定义拦截
-                if (before) {
-                    before();
-                }
-            },
-            // 响应拦截
-            success: (args: UniApp.RequestSuccessCallbackResult) => {
-                this.handleError(args.statusCode, (args.data as AnyObject)[this.config.requestSuccessResponseMsgName as string]);
-
-                this.config.apiErrorInterception && this.config.apiErrorInterception(args.data, args);
-
-                if (this.config.debug) {
-                    console.warn(`【LwuRequest Debug:响应拦截】${JSON.stringify(args)}`);
-                }
-
-                if (after) {
-                    after();
-                }
-
-                uni.removeInterceptor('request');
-            },
-            fail: (err: UniApp.GeneralCallbackResult) => {
-                if (this.config.debug) {
-                    console.warn(`【LwuRequest Debug:请求拦截失败】${JSON.stringify(err)}`);
-                }
-
-                uni.removeInterceptor('request');
-            },
-            complete: (res: UniApp.GeneralCallbackResult) => {
-                uni.hideLoading();
-                if (this.config.debug) {
-                    console.warn(`【LwuRequest Debug:请求拦截完成】${JSON.stringify(res)}`);
-                }
-
-                uni.removeInterceptor('request');
-            }
-        });
     }
 
     /**
@@ -253,9 +176,31 @@ export class Http {
             requestTasks[options?.task_id]?.abort();
         }
 
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             // 拦截器
-            this.interceptor(url, options.before, options.after, options.header);
+            const chain = interceptor({
+                request: (options: any) => {
+                    url = options.url;
+                    return options;
+                },
+                response: (response: any) => {
+                    // console.log(response, '响应拦截');
+                }
+            }, {
+                url: url,
+                before: options.before,
+                after: options.after,
+                header: options.header
+            }, this.config);
+            chain.request({
+                header: {
+                    contentType: '',
+                    ...options.header
+                },
+                method: options.method ?? 'GET',
+                data,
+                url
+            });
             // let header: any = {};
 
             // 判断是否存在token，如果存在则在请求头统一添加token，token获取从config配置获取
@@ -287,15 +232,15 @@ export class Http {
                         data[this.config.takenTokenKeyName as string] = getToken;
                     }
                 }
-				
+
                 // 发起请求
                 this.currentRequestTask = uni.request({
                     url: url,
                     data: data,
                     // header: reqHeader.header,
-					header: {
-						...options.header
-					},
+                    header: {
+                        ...options.header
+                    },
                     method: options.method,
                     timeout: options.timeout,
                     dataType: options.dataType,
@@ -304,6 +249,7 @@ export class Http {
                     withCredentials: options.withCredentials,
                     firstIpv4: options.firstIpv4,
                     success: (res: UniApp.RequestSuccessCallbackResult) => {
+                        chain.response(res);
                         if (res.statusCode !== this.config.tokenExpiredCode) {
                             resolve(res.data);
                         } else {
@@ -315,6 +261,7 @@ export class Http {
                         }
                     },
                     fail: (err: UniApp.GeneralCallbackResult) => {
+                        chain.fail(err);
                         this.retryCount = options.retryCount ?? 3;
 
                         if (this.retryCount === 0) {
@@ -329,8 +276,9 @@ export class Http {
                             this.config.networkExceptionHandle && this.config.networkExceptionHandle();
                         }
                     },
-                    complete: () => {
-                        uni.removeInterceptor('request');
+                    complete: (res: UniApp.GeneralCallbackResult) => {
+                        chain.complete(res);
+                        // uni.removeInterceptor('request');
                     }
                 });
 
