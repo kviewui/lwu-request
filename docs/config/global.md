@@ -358,6 +358,17 @@ ___
      * @returns
      */
     networkExceptionHandle: () => {},
+    /**
+     * API成功状态码
+     * + `1.2.0` 及以上版本支持
+     * + 设置该参数后，API业务失败时将直接抛出异常，开发者需要在 `catch` 中捕获API返回的错误信息，或者在 `apiErrorInterception` 中统一捕获API返回的错误信息
+     */
+    xhrCode: 0,
+    /**
+     * 语义化接口响应状态码字段名称，默认为 `code`
+     * + `1.2.0` 及以上版本支持
+     */
+    xhrCodeName: 'code',
 	/**
      * 请求成功时接口响应描述信息字段名称，默认为 `'msg'`
      */
