@@ -9,7 +9,13 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: '首页', link: '/' },
-      { text: '文档', link: '/intro' }
+      { text: '文档', link: '/intro' },
+      { 
+        text: '1.2.0',
+        items: [
+          {  text: '更新日志', link: 'changelog'}
+        ]
+      }
     ],
     editLink: {
       pattern: 'https://github.com/kviewui/lwu-request/edit/main/docs/:path',
@@ -59,6 +65,10 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/kviewui/lwu-request' }
-    ]
+    ],
+    footer: {
+      copyright: 'Copyright © 2023-present KviewUI',
+      message: '本文档内容版权为 Lwu-Request 官方团队所有，保留所有权利。'
+    }
   }
 })
