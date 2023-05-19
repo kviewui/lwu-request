@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.2.0	(2023-05-19)
++ 增加 `xhrCode` API成功状态码配置项。[详情](/config/global#xhrcode)
++ 增加 `xhrCodeName` 语义化接口响应状态码字段名称配置项。[详情](/config/global#xhrcodename)
+
 ## 1.1.13	(2023-05-18)
 + 修复多个GET请求时请求冲突问题。[详情](https://github.com/kviewui/lwu-request/issues/3)
 

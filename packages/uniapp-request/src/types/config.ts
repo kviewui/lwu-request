@@ -64,6 +64,17 @@ export interface Config {
      */
     apiErrorInterception?: (data: any, args?: UniApp.RequestSuccessCallbackResult) => void;
     /**
+     * API成功状态码
+     * + `1.2.0` 及以上版本支持
+     * + 设置该参数后，API业务失败时将直接抛出异常，开发者需要在 `catch` 中捕获API返回的错误信息，或者在 `apiErrorInterception` 中统一捕获API返回的错误信息
+     */
+    xhrCode?: number;
+    /**
+     * 语义化接口响应状态码字段名称，一般为 `code`
+     * + `1.2.0` 及以上版本支持
+     */
+    xhrCodeName?: string;
+    /**
      * 网络异常或者断网处理程序，建议更新缓存中是否断网或者网络繁忙的标识以便前端页面展示没有网络或者断网的通用异常页面
      * @returns
      */

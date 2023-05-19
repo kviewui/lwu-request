@@ -97,6 +97,22 @@ apiErrorInterception: (data: Data, args?: UniApp.RequestSuccessCallbackResult) =
 }
 ```
 
+## xhrCode
++ **类型**: `number`
++ **默认值**: ` `
++ **是否必填**: 否
++ **描述**: API成功状态码
+    + `1.2.0` 及以上版本支持
+    + 设置该参数后，API业务失败时将直接抛出异常，开发者需要在 `catch` 中捕获API返回的错误信息，或者在 [`apiErrorInterception`](/config/global#apierrorinterception) 中统一捕获API返回的错误信息
+    + 可配置 [`xhrCodeName`](/config/global#xhrcodename) 实现自定义接口响应状态码字段名称
+
+## xhrCodeName
++ **类型**: `string`
++ **默认值**: `code`
++ **是否必填**: 否
++ **描述**: 语义化接口响应状态码字段名称
+    + `1.2.0` 及以上版本支持
+
 ## networkExceptionHandle
 + **类型**: `() => {}`
 + **默认值**: `() => {}`

@@ -184,7 +184,7 @@ export class Http {
                     return options;
                 },
                 response: (response: any) => {
-                    // console.log(response, '响应拦截');
+                    return response;
                 }
             }, {
                 url: url,
@@ -250,6 +250,11 @@ export class Http {
                     firstIpv4: options.firstIpv4,
                     success: (res: UniApp.RequestSuccessCallbackResult) => {
                         chain.response(res);
+                        
+                        if (typeof this.config.xhrCode !== 'undefined' && this.config.xhrCodeName && (res.data as any)[this.config.xhrCodeName] && (res.data as any)[this.config.xhrCodeName] !== this.config.xhrCode) {
+                            reject(res);
+                        }
+
                         if (res.statusCode !== this.config.tokenExpiredCode) {
                             resolve(res.data);
                         } else {
