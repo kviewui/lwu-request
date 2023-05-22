@@ -161,7 +161,10 @@ export class Http {
     }
 
     public request(url: string, data: any = {}, options: RequestOptions) {
-        options = options ?? this.reqConfig;
+        options = {
+            ...options,
+            ...this.reqConfig
+        };
         // 判断该请求队列是否存在，如果存在则中断请求
         const requestTasks = uni.getStorageSync(this.requestTasksName);
 
