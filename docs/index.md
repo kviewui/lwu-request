@@ -13,6 +13,9 @@ hero:
     - theme: alt
       text: 查看源码
       link: https://github.com/kviewui/lwu-request
+    - theme: alt
+      text: 问题反馈
+      link: https://github.com/kviewui/lwu-request/issues
 
 features:
   - icon: 💡

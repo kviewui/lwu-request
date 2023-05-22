@@ -28,8 +28,8 @@ export default defineConfig({
         items: [
           { text: '介绍', link: '/intro' },
           { text: '快速上手', link: '/start' },
-          { text: '更新日志', link: '/changelog' }
-          // { text: '请求示例', link: '/examples' }
+          { text: '更新日志', link: '/changelog' },
+          { text: '常见问题', link: '/faq' }
         ]
       },
       {
