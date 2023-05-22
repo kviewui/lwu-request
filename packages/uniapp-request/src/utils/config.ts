@@ -21,7 +21,22 @@ export const useConfig = (config: Config) => {
          * 请求中loading弹窗的提示文本，默认为 `'请求中...'`
          */
         loadingText: config.loadingText ?? '请求中...',
+        /**
+         * 自定义请求前拦截
+         * + `1.3.12` 及以上版本支持。
+         */
+        before: config.before,
+        /**
+         * 自定义请求后拦截
+         * + `1.3.12` 及以上版本支持。
+         */
+        after: config.after,
         // 下面配置项参考 [uniapp 网络请求API](https://uniapp.dcloud.io/api/request/request.html)
+        /**
+         * 自定义请求头信息
+         * + `1.3.12` 及以上版本支持。
+         */
+        header: config.header ?? {},
         /**
          * 请求超时时间，单位`ms`
          */

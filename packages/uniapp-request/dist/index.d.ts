@@ -22,6 +22,21 @@ interface Config {
      */
     loadingText?: string;
     /**
+     * 自定义请求前拦截
+     * + `1.3.12` 及以上版本支持。
+     */
+    before?: Function;
+    /**
+     * 自定义请求后拦截
+     * + `1.3.12` 及以上版本支持。
+     */
+    after?: Function;
+    /**
+     * 自定义请求头信息
+     * + `1.3.12` 及以上版本支持。
+     */
+    header?: object;
+    /**
      * 请求超时时间，单位ms
      */
     timeout?: number;

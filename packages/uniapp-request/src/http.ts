@@ -105,7 +105,10 @@ export class Http {
             ...useConfig(config),
         };
         
-        this.reqConfig = this.globalConfig;
+        this.reqConfig = {
+            task_id: '',
+            ...this.globalConfig
+        };
 
         if (!this.globalConfig.retry) {
             this.retryCount = 0;
@@ -161,19 +164,19 @@ export class Http {
     }
 
     public request(url: string, data: any = {}, options: RequestOptions) {
-        options = {
-            ...options,
-            ...this.reqConfig
+        const multiOptions = {
+            ...this.reqConfig,
+            ...options
         };
         // 判断该请求队列是否存在，如果存在则中断请求
         const requestTasks = uni.getStorageSync(this.requestTasksName);
 
-        if (options?.task_id && requestTasks[options?.task_id]) {
+        if (multiOptions?.task_id && requestTasks[multiOptions?.task_id]) {
             if (this.globalConfig.debug) {
-                console.warn(`【LwuRequest Debug】请求ID${options.task_id}有重复项已自动过滤`);
+                console.warn(`【LwuRequest Debug】请求ID${multiOptions.task_id}有重复项已自动过滤`);
             }
 
-            requestTasks[options?.task_id]?.abort();
+            requestTasks[multiOptions?.task_id]?.abort();
         }
 
         return new Promise(async (resolve, reject) => {
@@ -188,14 +191,14 @@ export class Http {
                 }
             }, {
                 url: url,
-                ...options
+                ...multiOptions
             }, this.globalConfig);
             chain.request({
                 header: {
                     contentType: '',
-                    ...options.header
+                    ...multiOptions.header
                 },
-                method: options.method ?? 'GET',
+                method: multiOptions.method ?? 'GET',
                 data,
                 url
             });
@@ -222,8 +225,8 @@ export class Http {
             setToken().then(getToken => {
                 if (getToken) {
                     if (this.globalConfig.takeTokenMethod === 'header') {
-                        options.header = options.header ?? {};
-                        (options.header as any)[this.globalConfig?.takenTokenKeyName as string] = getToken;
+                        multiOptions.header = multiOptions.header ?? {};
+                        (multiOptions.header as any)[this.globalConfig?.takenTokenKeyName as string] = getToken;
                     }
 
                     if (this.globalConfig.takeTokenMethod === 'body') {
@@ -237,15 +240,15 @@ export class Http {
                     data: data,
                     // header: reqHeader.header,
                     header: {
-                        ...options.header
+                        ...multiOptions.header
                     },
-                    method: options.method,
-                    timeout: options.timeout,
-                    dataType: options.dataType,
-                    responseType: options.responseType,
-                    sslVerify: options.sslVerify,
-                    withCredentials: options.withCredentials,
-                    firstIpv4: options.firstIpv4,
+                    method: multiOptions.method,
+                    timeout: multiOptions.timeout,
+                    dataType: multiOptions.dataType,
+                    responseType: multiOptions.responseType,
+                    sslVerify: multiOptions.sslVerify,
+                    withCredentials: multiOptions.withCredentials,
+                    firstIpv4: multiOptions.firstIpv4,
                     success: (res: UniApp.RequestSuccessCallbackResult) => {
                         chain.response(res);
 
@@ -264,13 +267,13 @@ export class Http {
                             // 刷新token
                             this.refreshToken();
                             uni.setStorageSync('LWU-REQUEST-CALLBACK', () => {
-                                resolve(this.request(url, data, options));
+                                resolve(this.request(url, data, multiOptions));
                             });
                         }
                     },
                     fail: (err: UniApp.GeneralCallbackResult) => {
                         chain.fail(err);
-                        this.retryCount = options.retryCount ?? 3;
+                        this.retryCount = multiOptions.retryCount ?? 3;
 
                         if (this.retryCount === 0) {
                             reject(err);
@@ -291,10 +294,10 @@ export class Http {
                 });
 
                 // 判断是否设置请求队列ID
-                if (options?.task_id) {
+                if (multiOptions?.task_id) {
                     // 当前请求存入缓存
                     let tasks: UniApp.RequestTask[] = [];
-                    tasks[options?.task_id as any] = this.currentRequestTask;
+                    tasks[multiOptions?.task_id as any] = this.currentRequestTask;
                     uni.setStorageSync(this.requestTasksName, tasks);
                 }
             });
@@ -335,6 +338,7 @@ export class Http {
      */
     public config(options: RequestOptions = {}) {
         this.reqConfig = {
+            ...this.reqConfig,
             ...options
         };
 
