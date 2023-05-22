@@ -90,7 +90,7 @@
 ::: danger 注意事项
 + 示例中的请求配置为全部配置内容演示，具体使用时需要根据自己的实际情况选择使用。
 :::
-+ **参数设置方式**
++ #### 参数设置方式
 ```ts
 request.request('/user/save', {
 	user_id: 1
@@ -119,7 +119,7 @@ request.request('/user/save', {
 	});
 ```
 
-+ **API设置方式**
++ #### API设置方式
 ```ts
 request
     .config({

@@ -6,6 +6,9 @@
 :::
 
 ## 使用示例
+::: tip 提示
+这里示例中的内容为演示，完整的请求配置内容参考 [API设置方式](/config/request#api设置方式)
+:::
 ```ts
 request
     .config({
