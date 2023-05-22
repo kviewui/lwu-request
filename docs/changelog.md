@@ -1,5 +1,8 @@
 # 更新日志
 
+## 1.3.10	(2023-05-22)
++ 修复因新增 `config` 请求API方法引起的bug。
+
 ## 1.3.0	(2023-05-22)
 + 优化 `apiErrorInterception` 拦截执行机制，当设置了 `xhrCode` 时API返回成功状态时拦截不再返回内容。
 + 请求配置增加 `loading` 和 `loadingText`，方便对单个请求设置显示的loading。[详情](/config/request.html#loading)。
