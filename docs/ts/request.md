@@ -16,5 +16,7 @@ interface RequestOptions {
     withCredentials?: boolean;
     firstIpv4?: boolean;
     retryCount?: number;
+    loading?: boolean;
+    loadingText?: string;
 };
 ```
