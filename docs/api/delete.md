@@ -1,4 +1,4 @@
-# DELETE
+# DELETE <Badge type="tip" text="已发布" />
 delete请求方法
 
 ## 使用示例

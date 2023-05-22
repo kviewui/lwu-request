@@ -1,4 +1,4 @@
-# REQUEST
+# REQUEST <Badge type="tip" text="已发布" />
 request请求方法，可以通过 `method` 请求参数指定请求方式，见 [`uniapp request api`](https://uniapp.dcloud.net.cn/api/request/request.html)
 
 ## 使用示例

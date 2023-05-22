@@ -1,4 +1,4 @@
-# ABORT
+# ABORT <Badge type="tip" text="已发布" />
 中断请求方法
 
 ## 使用示例

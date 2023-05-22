@@ -1,4 +1,4 @@
-# CONFIG
+# CONFIG <Badge type="tip" text="已发布" />
 设置请求配置内容，一般用于链式调用场景。
 ::: warning 注意事项
 + `1.3.0` 及以上版本支持。

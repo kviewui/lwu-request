@@ -1,4 +1,4 @@
-# GET
+# GET <Badge type="tip" text="已发布" />
 get请求方法，内部已自动转为 `query string` 参数字符串。可以自定义转化方法，参考[`buildQueryString`](/config/global#buildquerystring)。
 
 ## 使用示例

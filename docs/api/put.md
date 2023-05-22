@@ -1,4 +1,4 @@
-# PUT
+# PUT <Badge type="tip" text="已发布" />
 put请求方法
 
 ## 使用示例
