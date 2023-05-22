@@ -72,3 +72,80 @@
 + **默认值**: `3`
 + **是否必填**: 否
 + **描述**: 请求失败自动重试次数
+
+## loading
++ **类型**：`boolean`
++ **默认值**: `true`
++ **是否必填**: 否
++ **描述**：请求过程是否显示loading
+
+## loadingText
++ **类型**：`string`
++ **默认值**: `请求中...`
++ **是否必填**: 否
++ **描述**：请求中loading弹窗的提示文本
+
+## 使用示例
+**请求配置支持 `参数设置` 和 `API设置` 两种方式供开发者选择使用，具体参考下面示例。**
+::: danger 注意事项
++ 示例中的请求配置为全部配置内容演示，具体使用时需要根据自己的实际情况选择使用。
+:::
++ **参数设置方式**
+```ts
+request.request('/user/save', {
+	user_id: 1
+}, {
+    task_id: 'user-info-111',
+    before: () => {},
+    after: () => {},
+    header: {},
+    method: 'POST',
+    timeout: 3000,
+    dataType: 'text',
+    responseType: 'json',
+    sslVerify: false,
+    withCredentials: false,
+    firstIpv4: false,
+    retryCount: 3,
+    loading: true,
+    loadingText: '加载中...'
+})
+	.then((res) => {
+		// 此处可自定义业务逻辑
+	})
+	.catch((err) => {
+		// 此处仅为演示
+		console.error('请求服务异常');
+	});
+```
+
++ **API设置方式**
+```ts
+request
+    .config({
+        task_id: 'user-info-111',
+        before: () => {},
+        after: () => {},
+        header: {},
+        method: 'POST',
+        timeout: 3000,
+        dataType: 'text',
+        responseType: 'json',
+        sslVerify: false,
+        withCredentials: false,
+        firstIpv4: false,
+        retryCount: 3,
+        loading: true,
+        loadingText: '加载中...'
+    })
+    .post('/user/save', {
+	    user_id: 1
+    })
+	.then((res) => {
+		// 此处可自定义业务逻辑
+	})
+	.catch((err) => {
+		// 此处仅为演示
+		console.error('请求服务异常');
+	});
+```

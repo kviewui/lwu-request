@@ -1,7 +1,7 @@
 # DELETE
 delete请求方法
 
-## 示例
+## 使用示例
 ```ts
 request.delete('/user/delete', {
 	user_id: 1

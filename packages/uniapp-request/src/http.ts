@@ -1,7 +1,6 @@
 import { loading, useConfig, interceptor } from './utils';
 // import qs from 'qs';
 import type { Config, RequestOptions } from './types';
-import { after, before } from 'node:test';
 
 /**
  * @param {number} times 重试次数
@@ -75,9 +74,9 @@ export class Http {
      */
     private retryDeadline: number = 10000;
     /**
-     * 配置信息
+     * 全局配置信息
      */
-    private config: Config = {
+    private globalConfig: Config = {
         baseUrl: {
             pro: '',
             dev: ''
@@ -96,16 +95,23 @@ export class Http {
         apiErrorInterception: (data: any) => { },
     };
 
+    /**
+     * 请求配置信息
+     */
+    private reqConfig: RequestOptions = {};
+
     constructor(config: Config) {
-        this.config = {
+        this.globalConfig = {
             ...useConfig(config),
         };
+        
+        this.reqConfig = this.globalConfig;
 
-        if (!this.config.retry) {
+        if (!this.globalConfig.retry) {
             this.retryCount = 0;
         } else {
-            if (this.config.retryCountAutoOffRetry) {
-                this.retryMaximum = (this.config.retryMaximum as number) * 1000;
+            if (this.globalConfig.retryCountAutoOffRetry) {
+                this.retryMaximum = (this.globalConfig.retryMaximum as number) * 1000;
                 this.retryTimeout = [];
                 this.retryDeadline = config.retryDeadline as number;
 
@@ -132,15 +138,15 @@ export class Http {
      */
     private handleError(code: number, message: string = ''): void {
         // 调用错误状态码处理程序
-        this.config.errorHandleByCode && this.config.errorHandleByCode(code, message);
+        this.globalConfig.errorHandleByCode && this.globalConfig.errorHandleByCode(code, message);
     }
 
     /**
      * 刷新token处理
      */
     private refreshToken() {
-        if (this.config.refreshTokenHandle) {
-            this.config.refreshTokenHandle()
+        if (this.globalConfig.refreshTokenHandle) {
+            this.globalConfig.refreshTokenHandle()
                 .then(() => {
                     // 重新执行业务请求
                     uni.getStorageSync('LWU-REQUEST-CALLBACK')((callback: () => void) => {
@@ -149,27 +155,18 @@ export class Http {
                 })
                 .catch(() => {
                     // token失效
-                    this.handleError(this.config.tokenExpiredCode as number);
+                    this.handleError(this.globalConfig.tokenExpiredCode as number);
                 });
         }
     }
 
-    public request(url: string, data: any = {}, options: RequestOptions = {
-        header: {},
-        method: this.config.method,
-        timeout: this.config.timeout,
-        dataType: this.config.dataType,
-        responseType: this.config.responseType,
-        sslVerify: this.config.sslVerify,
-        withCredentials: this.config.withCredentials,
-        firstIpv4: this.config.firstIpv4,
-        retryCount: this.config.retryCount
-    }) {
+    public request(url: string, data: any = {}, options: RequestOptions) {
+        options = this.reqConfig ?? options;
         // 判断该请求队列是否存在，如果存在则中断请求
         const requestTasks = uni.getStorageSync(this.requestTasksName);
 
         if (options?.task_id && requestTasks[options?.task_id]) {
-            if (this.config.debug) {
+            if (this.globalConfig.debug) {
                 console.warn(`【LwuRequest Debug】请求ID${options.task_id}有重复项已自动过滤`);
             }
 
@@ -188,10 +185,8 @@ export class Http {
                 }
             }, {
                 url: url,
-                before: options.before,
-                after: options.after,
-                header: options.header
-            }, this.config);
+                ...options
+            }, this.globalConfig);
             chain.request({
                 header: {
                     contentType: '',
@@ -204,14 +199,14 @@ export class Http {
             // let header: any = {};
 
             // 判断是否存在token，如果存在则在请求头统一添加token，token获取从config配置获取
-            let token = uni.getStorageSync(this.config.tokenStorageKeyName as string);
+            let token = uni.getStorageSync(this.globalConfig.tokenStorageKeyName as string);
 
             const setToken = () => {
                 return new Promise((resolve, _) => {
                     token && resolve(token);
 
-                    if (this.config.tokenValue) {
-                        this.config.tokenValue().then(res => {
+                    if (this.globalConfig.tokenValue) {
+                        this.globalConfig.tokenValue().then(res => {
                             res && resolve(res);
                             resolve(false);
                         })
@@ -223,13 +218,13 @@ export class Http {
 
             setToken().then(getToken => {
                 if (getToken) {
-                    if (this.config.takeTokenMethod === 'header') {
+                    if (this.globalConfig.takeTokenMethod === 'header') {
                         options.header = options.header ?? {};
-                        (options.header as any)[this.config?.takenTokenKeyName as string] = getToken;
+                        (options.header as any)[this.globalConfig?.takenTokenKeyName as string] = getToken;
                     }
 
-                    if (this.config.takeTokenMethod === 'body') {
-                        data[this.config.takenTokenKeyName as string] = getToken;
+                    if (this.globalConfig.takeTokenMethod === 'body') {
+                        data[this.globalConfig.takenTokenKeyName as string] = getToken;
                     }
                 }
 
@@ -250,12 +245,17 @@ export class Http {
                     firstIpv4: options.firstIpv4,
                     success: (res: UniApp.RequestSuccessCallbackResult) => {
                         chain.response(res);
-                        
-                        if (typeof this.config.xhrCode !== 'undefined' && this.config.xhrCodeName && (res.data as any)[this.config.xhrCodeName] && (res.data as any)[this.config.xhrCodeName] !== this.config.xhrCode) {
-                            reject(res);
+
+                        if (typeof this.globalConfig.xhrCode === 'undefined') {
+                            this.globalConfig.apiErrorInterception && this.globalConfig.apiErrorInterception(res.data, res);
+                        } else {
+                            if (this.globalConfig.xhrCodeName && (res.data as any)[this.globalConfig.xhrCodeName] && (res.data as any)[this.globalConfig.xhrCodeName] !== this.globalConfig.xhrCode) {
+                                this.globalConfig.apiErrorInterception && this.globalConfig.apiErrorInterception(res.data, res);
+                                reject(res);
+                            }
                         }
 
-                        if (res.statusCode !== this.config.tokenExpiredCode) {
+                        if (res.statusCode !== this.globalConfig.tokenExpiredCode) {
                             resolve(res.data);
                         } else {
                             // 刷新token
@@ -272,13 +272,13 @@ export class Http {
                         if (this.retryCount === 0) {
                             reject(err);
                         } else {
-                            if (this.config.debug) {
+                            if (this.globalConfig.debug) {
                                 console.warn(`【LwuRequest Debug】自动重试次数：${this.retryCount}`);
                             }
                             this.retryCount--;
                             setTimeout(this.request, this.retryTimeout.shift());
                             // 网络异常或者断网处理
-                            this.config.networkExceptionHandle && this.config.networkExceptionHandle();
+                            this.globalConfig.networkExceptionHandle && this.globalConfig.networkExceptionHandle();
                         }
                     },
                     complete: (res: UniApp.GeneralCallbackResult) => {
@@ -324,6 +324,18 @@ export class Http {
             method: 'DELETE',
             ...options
         });
+    }
+
+    /**
+     * 设置请求配置信息，方便链式调用
+     * @param options 
+     */
+    public config(options: RequestOptions = {}) {
+        this.reqConfig = {
+            ...options
+        };
+
+        return this;
     }
 
     /**

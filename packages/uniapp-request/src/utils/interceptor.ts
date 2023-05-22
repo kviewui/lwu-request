@@ -1,4 +1,4 @@
-import type { Config } from '../types/config';
+import type { Config, RequestOptions } from '../types';
 import { loading } from '../utils/prompt';
 
 /**
@@ -15,9 +15,11 @@ export const objToQueryString = (obj: object): string => {
     return obj;
 }
 
-export function interceptor(chain: any, params: {
-    url: string, before: any, after: any, header: any
-}, config: Config) {
+interface Params extends RequestOptions {
+    url?: string;
+};
+
+export function interceptor(chain: any, params: Params, config: Config) {
     /**
      * 请求失败的错误统一处理
      * @param code - 错误码
@@ -34,8 +36,11 @@ export function interceptor(chain: any, params: {
             console.warn(`【LwuRequest Debug:请求拦截】${JSON.stringify(options)}`);
         }
 
-        if (config.loading) {
-            loading({ title: config.loadingText ?? '请求中...' });
+        const isLoading = params.loading ?? config.loading;
+        const loadingText = params.loadingText ?? config.loadingText;
+
+        if (isLoading) {
+            loading({ title: loadingText ?? '请求中...' });
         }
 
         if (options?.header?.contentType) {
@@ -72,7 +77,7 @@ export function interceptor(chain: any, params: {
     const success = (response: UniApp.RequestSuccessCallbackResult) => {
         handleError(response.statusCode, (response.data as AnyObject)[config.requestSuccessResponseMsgName as string]);
 
-        config.apiErrorInterception && config.apiErrorInterception(response.data, response);
+        // config.apiErrorInterception && config.apiErrorInterception(response.data, response);
 
         if (config.debug) {
             console.warn(`【LwuRequest Debug:响应拦截】${JSON.stringify(response)}`);

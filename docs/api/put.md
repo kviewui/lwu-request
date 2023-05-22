@@ -1,7 +1,7 @@
 # PUT
 put请求方法
 
-## 示例
+## 使用示例
 ```ts
 request.put('/user/edit', {
 	user_id: 1

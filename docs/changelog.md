@@ -1,5 +1,10 @@
 # 更新日志
 
+## 1.3.0	(2023-05-22)
++ 优化 `apiErrorInterception` 拦截执行机制，当设置了 `xhrCode` 时API返回成功状态时拦截不再返回内容。
++ 请求配置增加 `loading` 和 `loadingText`，方便对单个请求设置显示的loading。[详情](/config/request.html#loading)。
++ 增加 `config` 请求API方法。[详情](/api/config.html)。
+
 ## 1.2.0	(2023-05-19)
 + 增加 `xhrCode` API成功状态码配置项。[详情](/config/global#xhrcode)
 + 增加 `xhrCodeName` 语义化接口响应状态码字段名称配置项。[详情](/config/global#xhrcodename)

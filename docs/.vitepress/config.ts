@@ -11,7 +11,7 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '文档', link: '/intro' },
       { 
-        text: '1.2.0',
+        text: '1.3.0',
         items: [
           {  text: '更新日志', link: 'changelog'}
         ]
@@ -40,6 +40,7 @@ export default defineConfig({
           { text: 'delete', link: '/api/delete' },
           { text: 'request', link: '/api/request' },
           { text: 'abort', link: '/api/abort' },
+          { text: 'config', link: '/api/config' },
           { text: 'upload', link: '/api/upload' },
           { text: 'download', link: '/api/download' }
         ]

@@ -1,7 +1,7 @@
 # POST
 post请求方法
 
-## 示例
+## 使用示例
 ```ts
 request.post('/user/save', {
 	user_id: 1

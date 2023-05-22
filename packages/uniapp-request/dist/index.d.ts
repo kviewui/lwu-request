@@ -160,6 +160,8 @@ interface RequestOptions {
     withCredentials?: boolean;
     firstIpv4?: boolean;
     retryCount?: number;
+    loading?: boolean;
+    loadingText?: string;
 }
 
 /**
@@ -197,9 +199,13 @@ declare class Http {
      */
     private retryDeadline;
     /**
-     * 配置信息
+     * 全局配置信息
      */
-    private config;
+    private globalConfig;
+    /**
+     * 请求配置信息
+     */
+    private reqConfig;
     constructor(config: Config);
     /**
      * 请求失败的错误统一处理
@@ -211,11 +217,16 @@ declare class Http {
      * 刷新token处理
      */
     private refreshToken;
-    request(url: string, data?: any, options?: RequestOptions): Promise<unknown>;
+    request(url: string, data: any, options: RequestOptions): Promise<unknown>;
     get(url: string, data?: object, options?: RequestOptions): Promise<unknown>;
     post(url: string, data?: object, options?: RequestOptions): Promise<unknown>;
     put(url: string, data?: object, options?: RequestOptions): Promise<unknown>;
     delete(url: string, data?: object, options?: RequestOptions): Promise<unknown>;
+    /**
+     * 设置请求配置信息，方便链式调用
+     * @param options
+     */
+    config(options?: RequestOptions): this;
     /**
      * 中断请求，不传 `task_id` 时默认中断当前任务
      * @param task_id

@@ -1,7 +1,7 @@
 # GET
-get请求方法，内部已自动转为 `query string` 参数字符串。
+get请求方法，内部已自动转为 `query string` 参数字符串。可以自定义转化方法，参考[`buildQueryString`](/config/global#buildquerystring)。
 
-## 示例
+## 使用示例
 ```ts
 request.get('/user/info', {
 	user_id: 1
