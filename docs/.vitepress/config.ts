@@ -13,7 +13,8 @@ export default defineConfig({
       { 
         text: '1.3.0',
         items: [
-          {  text: '更新日志', link: 'changelog'}
+          {  text: '更新日志', link: 'changelog'},
+          {  text: 'uniapp插件市场地址', link: 'https://ext.dcloud.net.cn/plugin?id=11409'},
         ]
       }
     ],
