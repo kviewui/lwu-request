@@ -1,6 +1,10 @@
 import { loading, useConfig, interceptor } from './utils';
 // import qs from 'qs';
-import type { Config, RequestOptions } from './types';
+import type { Config, RequestOptions, DownloadParams, UploadParams, DownloadSuccessResultCallback, UploadAliossOptions } from './types';
+import UploadAlioss from './utils/alioss';
+
+interface MultiOptions extends Config { };
+interface MultiOptions extends RequestOptions { };
 
 /**
  * @param {number} times 重试次数
@@ -104,9 +108,10 @@ export class Http {
         this.globalConfig = {
             ...useConfig(config),
         };
-        
+
         this.reqConfig = {
             task_id: '',
+            domain: '',
             ...this.globalConfig
         };
 
@@ -163,47 +168,19 @@ export class Http {
         }
     }
 
-    public request(url: string, data: any = {}, options: RequestOptions) {
-        const multiOptions = {
-            ...this.reqConfig,
-            ...options
-        };
+    private beforeRequest(data: any = {}, options?: MultiOptions) {
         // 判断该请求队列是否存在，如果存在则中断请求
         const requestTasks = uni.getStorageSync(this.requestTasksName);
 
-        if (multiOptions?.task_id && requestTasks[multiOptions?.task_id]) {
+        if (options?.task_id && requestTasks[options?.task_id]) {
             if (this.globalConfig.debug) {
-                console.warn(`【LwuRequest Debug】请求ID${multiOptions.task_id}有重复项已自动过滤`);
+                console.warn(`【LwuRequest Debug】请求ID${options.task_id}有重复项已自动过滤`);
             }
 
-            requestTasks[multiOptions?.task_id]?.abort();
+            requestTasks[options?.task_id]?.abort();
         }
 
         return new Promise(async (resolve, reject) => {
-            // 拦截器
-            const chain = interceptor({
-                request: (options: any) => {
-                    url = options.url;
-                    return options;
-                },
-                response: (response: any) => {
-                    return response;
-                }
-            }, {
-                url: url,
-                ...multiOptions
-            }, this.globalConfig);
-            chain.request({
-                header: {
-                    contentType: '',
-                    ...multiOptions.header
-                },
-                method: multiOptions.method ?? 'GET',
-                data,
-                url
-            });
-            // let header: any = {};
-
             // 判断是否存在token，如果存在则在请求头统一添加token，token获取从config配置获取
             let token = uni.getStorageSync(this.globalConfig.tokenStorageKeyName as string);
 
@@ -223,16 +200,59 @@ export class Http {
             }
 
             setToken().then(getToken => {
-                if (getToken) {
+                if (getToken && options) {
                     if (this.globalConfig.takeTokenMethod === 'header') {
-                        multiOptions.header = multiOptions.header ?? {};
-                        (multiOptions.header as any)[this.globalConfig?.takenTokenKeyName as string] = getToken;
+                        options.header = options.header ?? {};
+                        (options.header as any)[this.globalConfig?.takenTokenKeyName as string] = getToken;
                     }
 
                     if (this.globalConfig.takeTokenMethod === 'body') {
                         data[this.globalConfig.takenTokenKeyName as string] = getToken;
                     }
                 }
+
+                resolve(true);
+            });
+        });
+    }
+
+    public request(url: string, data: any = {}, options: RequestOptions) {
+        const multiOptions = {
+            ...this.reqConfig,
+            ...options
+        };
+        console.log(multiOptions, '合并请求配置');
+
+        return new Promise((resolve, reject) => {
+            this.beforeRequest(data, {
+                ...multiOptions,
+                baseUrl: {
+                    dev: this.globalConfig.baseUrl.dev,
+                    pro: this.globalConfig.baseUrl.pro
+                }
+            }).then(() => {
+                // 拦截器
+                const chain = interceptor({
+                    request: (options: any) => {
+                        url = options.url;
+                        return options;
+                    },
+                    response: (response: any) => {
+                        return response;
+                    }
+                }, {
+                    url: url,
+                    ...options
+                }, this.globalConfig);
+                chain.request({
+                    header: {
+                        contentType: '',
+                        ...options?.header
+                    },
+                    method: options?.method ?? 'GET',
+                    data,
+                    url
+                });
 
                 // 发起请求
                 this.currentRequestTask = uni.request({
@@ -242,7 +262,7 @@ export class Http {
                     header: {
                         ...multiOptions.header
                     },
-                    method: multiOptions.method,
+                    method: multiOptions.method as any,
                     timeout: multiOptions.timeout,
                     dataType: multiOptions.dataType,
                     responseType: multiOptions.responseType,
@@ -358,9 +378,170 @@ export class Http {
             this.currentRequestTask.abort();
         }
     }
+
+    /**
+     * 文件下载
+     * @param params 
+     */
+    public download(params: DownloadParams) {
+        const multiOptions = {
+            ...this.reqConfig,
+            ...params,
+            method: 'DOWNLOAD' as any
+        };
+        // 拦截器
+        const chain = interceptor({
+            request: (options: any) => {
+                params.url = options.url;
+                return options;
+            },
+            response: (response: any) => {
+                return response;
+            }
+        }, {
+            ...multiOptions
+        }, this.globalConfig);
+        const header = {
+            contentType: '',
+            ...multiOptions?.header
+        };
+        chain.request({
+            header: header,
+            method: 'DOWNLOAD',
+            data: '',
+            url: params.url
+        });
+        return uni.downloadFile({
+            url: params.url,
+            header: header,
+            timeout: multiOptions.timeout ?? 60000,
+            filePath: multiOptions.filePath,
+            success: (res: DownloadSuccessResultCallback) => {
+                chain.response({
+                    ...res,
+                    data: '',
+                    header: {},
+                    cookies: []
+                });
+                params.success && params.success(res);
+            },
+            fail: (fail: UniApp.GeneralCallbackResult) => {
+                chain.fail(fail);
+                params.fail && params.fail(fail);
+            },
+            complete: (res: UniApp.GeneralCallbackResult) => {
+                chain.complete(res);
+                params.complete && params.complete(res);
+            }
+        });
+    }
+
+    /**
+     * 普通文件上传
+     * @param params 
+     */
+    public upload(params: UploadParams) {
+        const multiOptions = {
+            ...this.reqConfig,
+            ...params,
+            method: 'UPLOAD' as any
+        };
+        // 拦截器
+        const chain = interceptor({
+            request: (options: any) => {
+                params.url = options.url;
+                return options;
+            },
+            response: (response: any) => {
+                return response;
+            }
+        }, {
+            ...multiOptions
+        }, this.globalConfig);
+        const header = {
+            contentType: '',
+            ...multiOptions?.header
+        };
+        chain.request({
+            header: header,
+            method: 'DOWNLOAD',
+            data: '',
+            url: params.url
+        });
+
+        return uni.uploadFile({
+            url: params.url,
+            files: params.files,
+            fileType: params.fileType,
+            file: params.file,
+            filePath: params.filePath,
+            name: params.name,
+            header: params.header,
+            timeout: params.timeout,
+            formData: params.formData,
+            success: (res: UniApp.UploadFileSuccessCallbackResult) => {
+                chain.response({
+                    ...res,
+                    data: '',
+                    header: {},
+                    cookies: []
+                });
+                params.success && params.success(res);
+            },
+            fail: (fail: UniApp.GeneralCallbackResult) => {
+                chain.fail(fail);
+                params.fail && params.fail(fail);
+            },
+            complete: (res: UniApp.GeneralCallbackResult) => {
+                chain.complete(res);
+                params.complete && params.complete(res);
+            }
+        });
+    }
+
+    /**
+     * 阿里云OSS直传，同步上传
+     * @param options 
+     */
+    public async uploadAliossSync(options: UploadAliossOptions) {
+
+        const aliyunOSSUploader = new UploadAlioss({
+            filePath: options.filePath,
+            uploadDir: options.uploadDir,
+            maxSize: options.maxSize,
+            uploadImageUrl: options.uploadImageUrl,
+            getOSSBySTS: options.getOSSBySTS,
+            getPolicyBase64: options.getPolicyBase64,
+            getSignature: options.getSignature
+        });
+
+        await aliyunOSSUploader.getOSSBySTSInfo();
+
+        return await aliyunOSSUploader.uploadFile(options.filePath, options.uploadDir);
+    }
+
+    /**
+     * 阿里云OSS直传，异步上传
+     * @param options 
+     */
+    public uploadAlioss(options: UploadAliossOptions) {
+        const aliyunOSSUploader = new UploadAlioss({
+            filePath: options.filePath,
+            uploadDir: options.uploadDir,
+            maxSize: options.maxSize,
+            uploadImageUrl: options.uploadImageUrl,
+            getOSSBySTS: options.getOSSBySTS,
+            getPolicyBase64: options.getPolicyBase64,
+            getSignature: options.getSignature
+        });
+
+        aliyunOSSUploader.getOSSBySTSInfo().then(() => {
+            return aliyunOSSUploader.uploadFile(options.filePath, options.uploadDir);
+        });
+    }
 }
 
 /**
  * 导出请求配置参数类型
  */
-export * from './types/request';
+export * from './types';

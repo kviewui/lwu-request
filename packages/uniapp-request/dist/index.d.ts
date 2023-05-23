@@ -163,20 +163,246 @@ interface Config {
 }
 
 interface RequestOptions {
+    /**
+     * 请求任务ID，一般在过滤重复请求，中止请求时使用
+     */
     task_id?: string;
+    /**
+     * 自定义请求前拦截
+     */
     before?: Function;
+    /**
+     * 自定义请求后拦截
+     */
     after?: Function;
+    /**
+     * 自定义请求头
+     */
     header?: object;
+    /**
+     * 请求方式
+     */
     method?: "GET" | "OPTIONS" | "HEAD" | "POST" | "PUT" | "DELETE" | "TRACE" | "CONNECT";
+    /**
+     * 请求超时时间
+     */
     timeout?: number;
+    /**
+     * 如果设为 json，会对返回的数据进行一次 JSON.parse，非 json 不会进行 JSON.parse
+     */
     dataType?: string;
+    /**
+     * 设置响应的数据类型。合法值：`text`、`arraybuffer`
+     */
     responseType?: string;
+    /**
+     * 验证 ssl 证书
+     */
     sslVerify?: boolean;
+    /**
+     * 跨域请求时是否携带凭证（cookies）
+     */
     withCredentials?: boolean;
+    /**
+     * DNS解析时优先使用ipv4
+     */
     firstIpv4?: boolean;
+    /**
+     * 请求失败自动重试次数
+     */
     retryCount?: number;
+    /**
+     * 请求过程是否显示loading
+     * + `1.3.0` 及以上版本支持
+     */
     loading?: boolean;
+    /**
+     * 请求中loading弹窗的提示文本
+     * + `1.3.0` 及以上版本支持
+     */
     loadingText?: string;
+    /**
+     * 自定义请求域名，用于设置单次请求的域名地址，常用于上传下载场景。
+     * + `1.4.10` 及以上版本支持
+     */
+    domain?: string;
+}
+
+/**
+ * 下载成功返回结果类型
+ */
+interface DownloadSuccessResultCallback extends UniApp.DownloadSuccessData {
+    /**
+     * 下载文件保存的路径（本地临时文件）。入参未指定 filePath 的情况下可用
+     */
+    apFilePath?: string;
+    /**
+     * 文件内容
+     */
+    fileContent?: Buffer;
+}
+/**
+ * 下载参数类型
+ */
+interface DownloadParams {
+    /**
+     * 下载资源的 url
+     */
+    url: string;
+    /**
+     * HTTP 请求 Header, header 中不能设置 Referer。
+     */
+    header?: object;
+    /**
+     * 超时时间，单位 ms
+     */
+    timeout?: number;
+    /**
+     * 指定文件下载后存储的路径 (本地路径)
+     */
+    filePath?: string;
+    /**
+     * 下载成功后以 tempFilePath 的形式传给页面，res = {tempFilePath: '文件的临时路径'}
+     */
+    success?: (result: DownloadSuccessResultCallback) => void;
+    /**
+     * 接口调用失败的回调函数
+     */
+    fail?: (result: UniApp.GeneralCallbackResult) => void;
+    /**
+     * 接口调用结束的回调函数（调用成功、失败都会执行）
+     */
+    complete?: (result: UniApp.GeneralCallbackResult) => void;
+    /**
+     * 自定义请求域名
+     * + 设置该参数后，本次请求时全局配置的 `baseUrl` 将失效
+     */
+    domain?: string;
+}
+
+interface Files {
+    name?: string;
+    file?: File;
+    uri: string;
+}
+interface UploadParams {
+    /**
+     * 开发者服务器 url
+     */
+    url: string;
+    /**
+     * 需要上传的文件列表。**使用 files 时，filePath 和 name 不生效**。
+     */
+    files: Files[];
+    /**
+     * 文件类型，image/video/audio
+     */
+    fileType?: 'image' | 'video' | 'audio';
+    /**
+     * 要上传的文件对象。
+     */
+    file?: File;
+    /**
+     * 要上传文件资源的路径。
+     */
+    filePath?: string;
+    /**
+     * 文件对应的 key , 开发者在服务器端通过这个 key 可以获取到文件二进制内容
+     */
+    name: string;
+    /**
+     * HTTP 请求 Header, header 中不能设置 Referer。
+     */
+    header?: object;
+    /**
+     * 超时时间，单位 ms
+     */
+    timeout?: number;
+    /**
+     * HTTP 请求中其他额外的 form data
+     */
+    formData?: Object;
+    /**
+     * 下载成功后以 tempFilePath 的形式传给页面，res = {tempFilePath: '文件的临时路径'}
+     */
+    success?: (result: UniApp.UploadFileSuccessCallbackResult) => void;
+    /**
+     * 接口调用失败的回调函数
+     */
+    fail?: (result: UniApp.GeneralCallbackResult) => void;
+    /**
+     * 接口调用结束的回调函数（调用成功、失败都会执行）
+     */
+    complete?: (result: UniApp.GeneralCallbackResult) => void;
+    /**
+     * 自定义请求域名
+     * + 设置该参数后，本次请求时全局配置的 `baseUrl` 将失效
+     */
+    domain?: string;
+}
+
+/**
+ * 后端STS临时授权返回类型
+ */
+interface GetOSSBySTSSuccessCallback {
+    /**
+     * STS临时授权的访问密钥AccessKey ID
+     */
+    access_key_id: string;
+    /**
+     * STS临时授权的访问密钥AccessKey Secret
+     */
+    access_key_secret: string;
+    /**
+     * STS临时授权的过期时间
+     */
+    expiration: string;
+    /**
+     * STS临时授权的安全令牌SecurityToken
+     */
+    security_token: string;
+    [key: string]: any;
+}
+interface UploadAliossOptions {
+    /**
+     * 要上传文件资源的路径
+     */
+    filePath: string;
+    /**
+     * 文件上传的存储目录
+     */
+    uploadDir: string;
+    /**
+     * 限制上传文件的大小，单位为MB
+     * + 默认值为 `15`
+     */
+    maxSize?: number;
+    /**
+     * 限制参数的生效时间，单位小时
+     * + 默认值为 `1`
+     */
+    timeout?: number;
+    /**
+     * 上传的阿里云OSS地址
+     * + 小程序后台需要同步添加上传合法域名
+     */
+    uploadImageUrl: string;
+    /**
+     * HTTP 请求中其他额外的 form data
+     */
+    formData?: object;
+    /**
+     * 获取OSS临时授权访问凭证信息
+     */
+    getOSSBySTS: () => Promise<GetOSSBySTSSuccessCallback>;
+    /**
+     * 获取签名的base64字符串
+     */
+    getPolicyBase64: () => Promise<string>;
+    /**
+     * 获取OSS签名
+     */
+    getSignature: (policyBase64: string) => Promise<string>;
 }
 
 /**
@@ -232,6 +458,7 @@ declare class Http {
      * 刷新token处理
      */
     private refreshToken;
+    private beforeRequest;
     request(url: string, data: any, options: RequestOptions): Promise<unknown>;
     get(url: string, data?: object, options?: RequestOptions): Promise<unknown>;
     post(url: string, data?: object, options?: RequestOptions): Promise<unknown>;
@@ -247,6 +474,37 @@ declare class Http {
      * @param task_id
      */
     abort(task_id?: string): void;
+    /**
+     * 文件下载
+     * @param params
+     */
+    download(params: DownloadParams): UniApp.DownloadTask;
+    /**
+     * 普通文件上传
+     * @param params
+     */
+    upload(params: UploadParams): UniApp.UploadTask;
+    /**
+     * 阿里云OSS直传，同步上传
+     * @param options
+     */
+    uploadAliossSync(options: UploadAliossOptions): Promise<{
+        code: number; /**
+         * API错误拦截处理程序，请根据业务实际情况灵活设置
+         * @param data
+         */
+        data?: {
+            uploadTask: any;
+            url: string;
+            path: string;
+        } | undefined;
+        msg: string;
+    }>;
+    /**
+     * 阿里云OSS直传，异步上传
+     * @param options
+     */
+    uploadAlioss(options: UploadAliossOptions): void;
 }
 
-export { Http, RequestOptions };
+export { Config, DownloadParams, DownloadSuccessResultCallback, Files, GetOSSBySTSSuccessCallback, Http, RequestOptions, UploadAliossOptions, UploadParams };

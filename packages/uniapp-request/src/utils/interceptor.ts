@@ -17,6 +17,7 @@ export const objToQueryString = (obj: object): string => {
 
 interface Params extends RequestOptions {
     url?: string;
+    [key: string]: any;
 };
 
 export function interceptor(chain: any, params: Params, config: Config) {
@@ -55,6 +56,10 @@ export function interceptor(chain: any, params: Params, config: Config) {
             // debug = this.config.debug as boolean;
         } else {
             baseURI = config.baseUrl.pro;
+        }
+
+        if (params.domain) {
+            baseURI = params.domain;
         }
 
         let reqUrl = `${baseURI}${params.url}`;
