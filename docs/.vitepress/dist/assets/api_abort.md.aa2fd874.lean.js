@@ -1,1 +1,0 @@
-import{_ as a,o as s,c as e,V as t}from"./chunks/framework.1ff97459.js";const y=JSON.parse('{"title":"ABORT","description":"","frontmatter":{},"headers":[],"relativePath":"api/abort.md","filePath":"api/abort.md"}'),o={name:"api/abort.md"},n=t("",7),l=[n];function r(p,c,i,d,h,_){return s(),e("div",null,l)}const b=a(o,[["render",r]]);export{y as __pageData,b as default};

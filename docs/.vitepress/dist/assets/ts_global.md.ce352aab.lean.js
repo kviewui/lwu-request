@@ -1,0 +1,1 @@
+import{_ as s,o as n,c as a,V as l}from"./chunks/framework.d7491e17.js";const A=JSON.parse('{"title":"全局配置","description":"","frontmatter":{},"headers":[],"relativePath":"ts/global.md","filePath":"ts/global.md"}'),p={name:"ts/global.md"},o=l("",4),t=[o];function e(c,y,r,i,D,C){return n(),a("div",null,t)}const f=s(p,[["render",e]]);export{A as __pageData,f as default};

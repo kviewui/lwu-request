@@ -1,7 +1,7 @@
 # ALIYUN
 
-这里是直传阿里云OSS的方法介绍，分为 [`uploadAliyunOSS`](/api/alioss#uploadaliyunoss) 异步上传方式和
-[`uploadAliyunOSSSync`](/api/alioss#uploadaliyunosssync)
+这里是直传阿里云OSS的方法介绍，分为 [`uploadAliyunOSS`](/api/aliyun#uploadaliyunoss) 异步上传方式和
+[`uploadAliyunOSSSync`](/api/aliyun#uploadaliyunosssync)
 同步上传方式。两个方法都需要获取后端或者前端返回的阿里OSS的
 `STS临时授权凭证信息`。[使用STS临时访问凭证访问OSS](https://help.aliyun.com/document_detail/100624.html?spm=a2c4g.375246.0.0.29494f77gjhPg6)
 

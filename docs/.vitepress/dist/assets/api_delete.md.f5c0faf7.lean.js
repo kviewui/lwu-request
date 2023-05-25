@@ -1,1 +1,0 @@
-import{_ as s,o as a,c as n,V as l}from"./chunks/framework.1ff97459.js";const C=JSON.parse('{"title":"DELETE","description":"","frontmatter":{},"headers":[],"relativePath":"api/delete.md","filePath":"api/delete.md"}'),e={name:"api/delete.md"},o=l("",4),p=[o];function t(c,r,D,y,F,A){return a(),n("div",null,p)}const d=s(e,[["render",t]]);export{C as __pageData,d as default};

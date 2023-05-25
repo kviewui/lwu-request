@@ -1,1 +1,0 @@
-import{_ as s,o as a,c as n,V as l}from"./chunks/framework.1ff97459.js";const C=JSON.parse('{"title":"PUT","description":"","frontmatter":{},"headers":[],"relativePath":"api/put.md","filePath":"api/put.md"}'),p={name:"api/put.md"},o=l("",4),t=[o];function e(c,r,D,y,F,i){return a(),n("div",null,t)}const _=s(p,[["render",e]]);export{C as __pageData,_ as default};
