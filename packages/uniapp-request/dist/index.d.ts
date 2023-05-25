@@ -398,11 +398,11 @@ interface UploadAliossOptions {
     /**
      * 获取签名的base64字符串
      */
-    getPolicyBase64: () => Promise<string>;
+    getPolicyBase64: () => string;
     /**
      * 获取OSS签名
      */
-    getSignature: (policyBase64: string) => Promise<string>;
+    getSignature: (policyBase64: string, accessKeySecret: string) => Promise<string>;
 }
 
 /**
@@ -489,10 +489,7 @@ declare class Http {
      * @param options
      */
     uploadAliossSync(options: UploadAliossOptions): Promise<{
-        code: number; /**
-         * API错误拦截处理程序，请根据业务实际情况灵活设置
-         * @param data
-         */
+        code: number;
         data?: {
             uploadTask: any;
             url: string;

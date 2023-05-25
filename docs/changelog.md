@@ -1,5 +1,12 @@
 # 更新日志
 
+## 1.4.10 (2023-05-25)
++ 新增 `upload` 文件上传接口。[详情](/api/upload)
++ 新增 `download` 文件下载接口。[详情](/api/download)
++ 新增 `uploadAliyunOSS` 异步直传阿里云OSS接口。[详情](/api/aliyun#uploadaliyunoss)
++ 新增 `uploadAliyunOSSSync` 同步直传阿里云OSS接口。[详情](/api/aliyun#uploadaliyunosssync)
++ 修复一些已知问题。
+
 ## 1.3.11	(2023-05-22)
 + 修复因新增 `config` 请求API方法引起的bug。
 

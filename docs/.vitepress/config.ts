@@ -58,7 +58,8 @@ export default defineConfig({
         text: 'TypeScript',
         items: [
           { text: '全局配置', link: '/ts/global' },
-          { text: '请求配置', link: '/ts/request' }
+          { text: '请求配置', link: '/ts/request' },
+          { text: '阿里云OSS配置', link: '/ts/aliyun' }
         ]
       }
     ],

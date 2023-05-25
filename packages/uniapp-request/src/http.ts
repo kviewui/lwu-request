@@ -221,7 +221,6 @@ export class Http {
             ...this.reqConfig,
             ...options
         };
-        console.log(multiOptions, '合并请求配置');
 
         return new Promise((resolve, reject) => {
             this.beforeRequest(data, {
@@ -504,7 +503,6 @@ export class Http {
      * @param options 
      */
     public async uploadAliossSync(options: UploadAliossOptions) {
-
         const aliyunOSSUploader = new UploadAlioss({
             filePath: options.filePath,
             uploadDir: options.uploadDir,

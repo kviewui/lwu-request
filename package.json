@@ -17,6 +17,8 @@
   },
   "private": "true",
   "devDependencies": {
+    "@dcloudio/types": "^3.3.3",
+    "@types/node": "^20.2.3",
     "vitepress": "1.0.0-alpha.75"
   }
 }
