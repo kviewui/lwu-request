@@ -339,7 +339,7 @@ export class Http {
 
     public put(url: string, data: object = {}, options: RequestOptions = {}) {
         return this.request(url, data, {
-            method: 'POST',
+            method: 'PUT',
             ...options
         });
     }

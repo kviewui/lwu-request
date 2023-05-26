@@ -1,5 +1,8 @@
 # 更新日志
 
+## 1.4.11 (2023-05-26)
++ 修复 `put` 方法bug。[详情](https://github.com/kviewui/lwu-request/issues/6)
+
 ## 1.4.10 (2023-05-25)
 + 新增 `upload` 文件上传接口。[详情](/api/upload)
 + 新增 `download` 文件下载接口。[详情](/api/download)
