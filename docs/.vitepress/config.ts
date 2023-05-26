@@ -1,5 +1,4 @@
 import { defineConfig } from 'vitepress'
-
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   lang: 'zh-CN',
@@ -14,6 +13,7 @@ export default defineConfig({
         text: '1.4.11',
         items: [
           {  text: '更新日志', link: 'changelog'},
+          { text: '开源贡献', link: '/convention/contributing'},
           {  text: 'uniapp插件市场地址', link: 'https://ext.dcloud.net.cn/plugin?id=11409'},
         ]
       }
@@ -65,6 +65,7 @@ export default defineConfig({
       {
         text: '开源贡献',
         items: [
+          { text: '贡献者名单', link: '/convention/contributors'},
           { text: '贡献指南', link: '/convention/contributing'},
           { text: '提交内容协议', link: '/convention/commit-convention'},
           { text: '代码行为准则', link: '/convention/code-of-conduct'}
