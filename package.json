@@ -5,9 +5,9 @@
   "scripts": {
     "build:uni": "cd packages/uniapp-request && tsup --config ./tsup.config.ts",
     "publish": "cd packages/uniapp-request && npm publish",
-    "docs:dev": "vitepress dev docs --port 5273",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:dev": "cd docs && npm run docs:dev",
+    "docs:build": "cd docs && npm run docs:build",
+    "docs:preview": "cd docs && npm run docs:preview"
   },
   "author": "kviewui@163.com",
   "license": "MIT",

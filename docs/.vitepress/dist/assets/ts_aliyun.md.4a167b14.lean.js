@@ -1,0 +1,1 @@
+import{_ as s,o as n,c as a,V as l}from"./chunks/framework.df15cb86.js";const A=JSON.parse('{"title":"阿里云OSS配置","description":"","frontmatter":{},"headers":[],"relativePath":"ts/aliyun.md","filePath":"ts/aliyun.md"}'),p={name:"ts/aliyun.md"},o=l("",8),t=[o];function e(c,y,r,i,C,D){return n(),a("div",null,t)}const f=s(p,[["render",e]]);export{A as __pageData,f as default};

@@ -1,1 +1,0 @@
-import{_ as s,o as a,c as n,V as l}from"./chunks/framework.d7491e17.js";const A=JSON.parse('{"title":"ALIYUN","description":"","frontmatter":{},"headers":[],"relativePath":"api/aliyun.md","filePath":"api/aliyun.md"}'),p={name:"api/aliyun.md"},o=l("",21),t=[o];function e(c,r,y,F,D,i){return a(),n("div",null,t)}const C=s(p,[["render",e]]);export{A as __pageData,C as default};
