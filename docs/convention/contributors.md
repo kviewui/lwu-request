@@ -15,12 +15,12 @@ const members = [
   {
     avatar: 'https://avatars.githubusercontent.com/u/41771224?v=4',
     name: 'littlezo',
-    title: '贡献者',
+    title: '@小小只',
     links: [
       { icon: 'github', link: 'https://github.com/littlezo' },
       // { icon: 'email', link: 'https://twitter.com/youyuxi' }
     ]
-  },
+  }
 ]
 </script>
 
