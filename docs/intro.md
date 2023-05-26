@@ -1,4 +1,4 @@
-# 介绍 <Badge type="tip" text="^1.4.10" />
+# 介绍 <Badge type="tip" text="^1.4.11" />
 
 基于 [`uniapp网络请求API`](https://uniapp.dcloud.net.cn/api/request/request.html) 封装的轻量级网络请求库。
 
