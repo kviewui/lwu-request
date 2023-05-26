@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # DOWNLOAD <Badge type="tip" text="已发布" />
 
 下载文件资源到本地，客户端直接发起一个 HTTP GET 请求，返回文件的本地临时路径。

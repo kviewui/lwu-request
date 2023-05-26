@@ -1,21 +1,32 @@
+---
+outline: deep
+---
+
 # 快速上手
 
 ## 安装
 
-```shell
+::: code-group
+```bash [pnpm]
 # pnpm方式【推荐】
 pnpm install lwu-request
+```
+```bash [npm]
 # npm 方式
 npm install lwu-request
+```
+```bash [cnpm]
 # cnpm 方式
 cnpm install lwu-request
+```
+```bash [yarn]
 # yarn 方式
 yarn add lwu-request
 ```
+:::
 
 ## 使用
-
-#### 引入并初始化
+### 引入并初始化
 ```ts
 import { Http } from 'lwu-request';
 

@@ -61,6 +61,14 @@ export default defineConfig({
           { text: '请求配置', link: '/ts/request' },
           { text: '阿里云OSS配置', link: '/ts/aliyun' }
         ]
+      },
+      {
+        text: '开源贡献',
+        items: [
+          { text: '贡献指南', link: '/convention/contributing'},
+          { text: '提交内容协议', link: '/convention/commit-convention'},
+          { text: '代码行为准则', link: '/convention/code-of-conduct'}
+        ]
       }
     ],
     search: {

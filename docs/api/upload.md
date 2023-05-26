@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # UPLOAD <Badge type="tip" text="已发布" />
 
 将本地资源上传到开发者服务器，客户端发起一个 `POST` 请求，其中 `content-type` 为 `multipart/form-data`。 如页面通过 [uni.chooseImage](https://uniapp.dcloud.net.cn/api/media/image#chooseimage) 等接口获取到一个本地资源的临时文件路径后，可通过此接口将本地资源上传到指定服务器。
