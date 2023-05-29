@@ -58,10 +58,9 @@ export function interceptor(chain: any, params: Params, config: Config) {
             baseURI = config.baseUrl.pro;
         }
 
-        if (params.domain) {
-            baseURI = params.domain;
-        }
-
+        // if (params.domain) {
+        //     baseURI = params.domain;
+        // }
         let reqUrl = `${baseURI}${params.url}`;
         if (options.method === 'GET') {
             options.data = config.buildQueryString && config.buildQueryString(options.data as object)
@@ -96,6 +95,7 @@ export function interceptor(chain: any, params: Params, config: Config) {
     };
 
     const fail = (err: UniApp.GeneralCallbackResult) => {
+        handleError(404, err.errMsg);
         if (config.debug) {
             console.warn(`【LwuRequest Debug:请求拦截失败】${JSON.stringify(err)}`);
         }
@@ -113,7 +113,7 @@ export function interceptor(chain: any, params: Params, config: Config) {
     return {
         request: invoke,
         response: success,
-        fail,
-        complete
+        fail: fail,
+        complete: complete
     }
 };

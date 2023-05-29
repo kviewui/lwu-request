@@ -1,5 +1,10 @@
 # 更新日志
 
+## 1.4.12 (2023-05-29)
++ 优化网络请求异常时的 `catch` 捕获逻辑。
++ 优化 `upload` API的header公共继承问题。[详情](https://github.com/kviewui/lwu-request/issues/9)
++ 优化其他一些已知问题。
+
 ## 1.4.11 (2023-05-26)
 + 修复 `put` 方法bug。[详情](https://github.com/kviewui/lwu-request/issues/6)
 
