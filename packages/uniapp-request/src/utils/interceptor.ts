@@ -88,7 +88,7 @@ export function interceptor(chain: any, params: Params, config: Config) {
         }
 
         if (params.after) {
-            params.after();
+            params.after(response);
         }
 
         return response;

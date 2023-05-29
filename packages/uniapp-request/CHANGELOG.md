@@ -1,3 +1,6 @@
+## 1.4.13 (2023-05-29)
++ 优化自定义请求后拦截，增加原始响应内容。
+
 ## 1.4.12 (2023-05-29)
 + 优化网络请求异常时的 `catch` 捕获逻辑。
 + 优化 `upload` API的header公共继承问题。[详情](https://github.com/kviewui/lwu-request/issues/9)
