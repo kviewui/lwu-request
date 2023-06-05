@@ -217,7 +217,7 @@ export class Http {
   }
 
   public request(url: string, data: any = {}, options: RequestOptions) {
-    const multiOptions = {
+    let multiOptions = {
       ...this.reqConfig,
       ...options
     };
@@ -235,6 +235,15 @@ export class Http {
           const chain = interceptor({
             request: (options: any) => {
               url = options.url;
+              multiOptions = {
+                ...this.reqConfig,
+                ...options,
+                header: {
+                  ...this.reqConfig.header,
+                  ...options?.header
+                }
+              }
+
               return options;
             },
             response: (response: any) => {
@@ -371,6 +380,18 @@ export class Http {
       ...this.reqConfig,
       ...options
     };
+
+    return this;
+  }
+
+  /**
+   * 设置请求头信息，方便链式调用
+   * @param header 
+   */
+  public setHeader(header: object) {
+    this.reqConfig.header = {
+      ...header
+    }
 
     return this;
   }

@@ -1,3 +1,5 @@
+type Method = "GET" | "OPTIONS" | "HEAD" | "POST" | "PUT" | "DELETE" | "TRACE" | "CONNECT";
+
 export interface RequestOptions {
     /**
      * 请求任务ID，一般在过滤重复请求，中止请求时使用
@@ -18,7 +20,7 @@ export interface RequestOptions {
     /**
      * 请求方式
      */
-    method?: "GET" | "OPTIONS" | "HEAD" | "POST" | "PUT" | "DELETE" | "TRACE" | "CONNECT";
+    method?: Method;
     /**
      * 请求超时时间
      */
@@ -63,3 +65,18 @@ export interface RequestOptions {
      */
     domain?: string;
 };
+
+export interface BeforeRequestCallbackResult {
+    data?: any;
+    header?: any;
+    method?: Method;
+    url?: string;
+};
+
+export interface AfterRequestCallbackResult {
+    data?: any;
+    cookie?: any;
+    errMsg?: string;
+    header?: any;
+    statusCode?: number;
+}

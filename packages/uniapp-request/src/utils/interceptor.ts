@@ -73,7 +73,10 @@ export function interceptor(chain: any, params: Params, config: Config) {
         }
 
         // 请求前自定义拦截
-        params.before && params.before();
+        // params.before && params.before();
+        if (params.before) {
+            params.before(options);
+        }
 
         return chain.request(options);
     };

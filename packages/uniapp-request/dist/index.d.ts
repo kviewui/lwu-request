@@ -162,6 +162,7 @@ interface Config {
     retryDeadline?: number;
 }
 
+type Method = "GET" | "OPTIONS" | "HEAD" | "POST" | "PUT" | "DELETE" | "TRACE" | "CONNECT";
 interface RequestOptions {
     /**
      * 请求任务ID，一般在过滤重复请求，中止请求时使用
@@ -182,7 +183,7 @@ interface RequestOptions {
     /**
      * 请求方式
      */
-    method?: "GET" | "OPTIONS" | "HEAD" | "POST" | "PUT" | "DELETE" | "TRACE" | "CONNECT";
+    method?: Method;
     /**
      * 请求超时时间
      */
@@ -226,6 +227,19 @@ interface RequestOptions {
      * + `1.4.10` 及以上版本支持
      */
     domain?: string;
+}
+interface BeforeRequestCallbackResult {
+    data?: any;
+    header?: any;
+    method?: Method;
+    url?: string;
+}
+interface AfterRequestCallbackResult {
+    data?: any;
+    cookie?: any;
+    errMsg?: string;
+    header?: any;
+    statusCode?: number;
 }
 
 /**
@@ -470,6 +484,11 @@ declare class Http {
      */
     config(options?: RequestOptions): this;
     /**
+     * 设置请求头信息，方便链式调用
+     * @param header
+     */
+    setHeader(header: object): this;
+    /**
      * 中断请求，不传 `task_id` 时默认中断当前任务
      * @param task_id
      */
@@ -504,4 +523,4 @@ declare class Http {
     uploadAlioss(options: UploadAliossOptions): void;
 }
 
-export { Config, DownloadParams, DownloadSuccessResultCallback, Files, GetOSSBySTSSuccessCallback, Http, RequestOptions, UploadAliossOptions, UploadParams };
+export { AfterRequestCallbackResult, BeforeRequestCallbackResult, Config, DownloadParams, DownloadSuccessResultCallback, Files, GetOSSBySTSSuccessCallback, Http, RequestOptions, UploadAliossOptions, UploadParams };
