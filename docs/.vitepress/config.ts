@@ -10,7 +10,7 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '文档', link: '/intro' },
       { 
-        text: '1.4.13',
+        text: '1.5.0',
         items: [
           {  text: '更新日志', link: 'changelog'},
           { text: '开源贡献', link: '/convention/contributing'},
@@ -44,7 +44,8 @@ export default defineConfig({
           { text: 'config', link: '/api/config' },
           { text: 'upload', link: '/api/upload' },
           { text: 'aliyun', link: '/api/aliyun' },
-          { text: 'download', link: '/api/download' }
+          { text: 'download', link: '/api/download' },
+          { text: 'setHeader', link: '/api/setHeader' }
         ]
       },
       {
@@ -59,7 +60,8 @@ export default defineConfig({
         items: [
           { text: '全局配置', link: '/ts/global' },
           { text: '请求配置', link: '/ts/request' },
-          { text: '阿里云OSS配置', link: '/ts/aliyun' }
+          { text: '阿里云OSS配置', link: '/ts/aliyun' },
+          { text: '请求拦截器', link: '/ts/interceptor' }
         ]
       },
       {

@@ -2,7 +2,7 @@
 
 ## 1.5.0  (2023-06-05)
 + 请求前拦截 `before` 增加原始请求内容。
-+ 增加 `setHeader` API方法。[详情](https://lwur.fdproxy.cn/api/setHeader.html)。
++ 增加 `setHeader` API方法。[详情](/api/setHeader.html)。
 + 优化其他一些已知问题。
 
 ## 1.4.13 (2023-05-29)
