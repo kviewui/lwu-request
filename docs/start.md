@@ -96,10 +96,10 @@ const request = new Http({
 			 * 用户模块接口管理
 			*/
 			// import http from "../request/http";
-			import { http } from "../http";
+			import { http, type RequestOptions } from "../http";
 
 			const user = {
-				info(data: object = {}, options: object = {}) {
+				info(data: object = {}, options: RequestOptions = {}) {
 					return http.post('/v1/user/userinfo', data, options);
 				}
 			}
@@ -109,7 +109,7 @@ const request = new Http({
 			// 该类型导出为可选内容
 			export interface User {
 				user: {
-					info: (data: object, options: object) => Promise<unknown>
+					info: (data: object, options: RequestOptions) => Promise<unknown>
 				}
 			};
 			```
@@ -134,14 +134,16 @@ const request = new Http({
 
 			::: tip
 			全局类型定义，如 `src/global.d.ts`，方便`vscode`自动提示
+
 			```ts
+			import type { RequestOptions } from 'lwu-request';
 			// 声明全局命名空间
 			declare global {
 				interface Uni {
 					$api: {
 						// 声明所有的api模块类型
 						user: {
-							info: (data: object, options?: object) => Promise<any>;
+							info: (data: object, options?: RequestOptions) => Promise<any>;
 						}
 					}
 				}

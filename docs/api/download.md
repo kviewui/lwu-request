@@ -2,7 +2,7 @@
 outline: deep
 ---
 
-# DOWNLOAD <Badge type="tip" text="已发布" />
+# DOWNLOAD <Badge type="tip" text="v1.4.10+" />
 
 下载文件资源到本地，客户端直接发起一个 HTTP GET 请求，返回文件的本地临时路径。
 ::: warning 注意事项

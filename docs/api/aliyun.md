@@ -2,7 +2,7 @@
 outline: deep
 ---
 
-# ALIYUN <Badge type="tip" text="已发布" />
+# ALIYUN <Badge type="tip" text="v1.4.10+" />
 
 这里是直传阿里云OSS的方法介绍，分为 [`uploadAliyunOSS`](/api/aliyun#uploadaliyunoss) 异步上传方式和
 [`uploadAliyunOSSSync`](/api/aliyun#uploadaliyunosssync)

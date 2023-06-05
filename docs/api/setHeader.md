@@ -2,7 +2,7 @@
 outline: deep
 ---
 
-# setHeader <Badge type="tip" text="已发布" />
+# setHeader <Badge type="tip" text="v1.5.0+" />
 
 设置请求头信息
 
