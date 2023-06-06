@@ -31,7 +31,7 @@ export function interceptor(chain: any, params: Params, config: Config) {
         config.errorHandleByCode && config.errorHandleByCode(code, message);
     }
 
-    const invoke = (options: { header: { [x: string]: any; contentType: any; }; method: string; data: string | object; url: string; }) => {
+    const invoke = (options: { header: { [x: string]: any; contentType?: any; }; method: string; data: string | object; url: string; }) => {
         // 请求前拦截处理
         if (config.debug) {
             console.warn(`【LwuRequest Debug:请求拦截】${JSON.stringify(options)}`);

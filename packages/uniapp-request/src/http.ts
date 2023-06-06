@@ -265,7 +265,7 @@ export class Http {
           });
           chain.request({
             header: {
-              contentType: '',
+              // contentType: '',
               ...options?.header
             },
             method: options?.method ?? 'GET',

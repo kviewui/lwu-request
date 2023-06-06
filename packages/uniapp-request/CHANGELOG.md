@@ -1,3 +1,6 @@
+## 1.5.01 (2023-06-06)
++ 删除header中的默认 `contentType` 字段默认值。
+
 ## 1.5.0  (2023-06-05)
 + 请求前拦截 `before` 增加原始请求内容。
 + 增加 `setHeader` API方法。[详情](https://lwur.fdproxy.cn/api/setHeader.html)。
