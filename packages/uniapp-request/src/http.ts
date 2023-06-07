@@ -307,8 +307,8 @@ export class Http {
               }
 
               let tokenExpiredCode = res.statusCode;
-              if (this.globalConfig?.tokenExpiredCodeType === 'apiResponseCode' && this.globalConfig.tokenExpiredCode) {
-                tokenExpiredCode = this.globalConfig.tokenExpiredCode;
+              if (this.globalConfig?.tokenExpiredCodeType === 'apiResponseCode' && this.globalConfig.tokenExpiredCode && this.globalConfig.xhrCodeName) {
+                tokenExpiredCode = (res.data as any)[this.globalConfig.xhrCodeName];
               }
 
               if (tokenExpiredCode !== this.globalConfig.tokenExpiredCode) {
