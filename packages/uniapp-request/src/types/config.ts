@@ -104,10 +104,10 @@ export interface Config {
     tokenStorageKeyName?: string;
     /**
      * 自定义获取task_id处理程序，通过promise返回最新task_id值即可
-     * + `1.5.x` 及以上版本支持
+     * + `1.5.11` 及以上版本支持
      * @returns
      */
-    taskIdValue?: (data: any = {}, options?: MultiOptions) => Promise<unknown>;
+    taskIdValue?: (data: any, options?: object) => Promise<unknown>;
     /**
      * 自定义获取token处理程序，通过promise返回最新token值即可
      * + `1.0.2` 及以上版本支持
@@ -147,6 +147,14 @@ export interface Config {
      * 自定义token失效的错误代码，便于请求库内部做自动刷新token判断
      */
     tokenExpiredCode?: number;
+    /**
+     * token失效错误代码类型，支持 `httpStatusCode` 和 `apiResponseCode`，默认为 `httpStatusCode`
+     * + `httpStatusCode`: 原生http请求状态码
+     * + `apiResponseCode`: 接口响应错误码
+     * 
+     * + `1.5.11` 及以上版本支持
+     */
+    tokenExpiredCodeType?: 'httpStatusCode' | 'apiResponseCode';
     /**
      * 请求失败是否自动重试
      */

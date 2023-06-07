@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.5.11 (2023-06-07)
++ 新增 `taskIdValue` 自定义获取task_id处理程序配置项。[详情](https://github.com/kviewui/lwu-request/pull/11)，[文档地址](/config/global.html#taskidvalue)
++ 新增 `tokenExpiredCodeType` token失效错误代码类型配置项。[文档地址](/config/global.html#tokenexpiredcodetype)
+
 ## 1.5.1 (2023-06-06)
 + 删除header中的默认 `contentType` 字段默认值。
 

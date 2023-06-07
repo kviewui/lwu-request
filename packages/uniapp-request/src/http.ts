@@ -168,20 +168,22 @@ export class Http {
     }
   }
 
-  private beforeRequest(data: any = {}, options?: MultiOptions) {
+  private async beforeRequest(data: any = {}, options?: MultiOptions) {
     // 判断该请求队列是否存在，如果存在则中断请求
     const requestTasks = uni.getStorageSync(this.requestTasksName);
+    let taskId = options?.task_id ?? '';
     if (this.globalConfig.taskIdValue) {
-      this.globalConfig.taskIdValue(data, options).then(res => {
-        options?.task_id = res
-      })
+      taskId = await this.globalConfig.taskIdValue(data, options) as string;
+      // this.globalConfig.taskIdValue(data, options).then(res => {
+      //   options.task_id = res
+      // })
     }
-    if (options?.task_id && requestTasks[options?.task_id]) {
+    if (taskId && requestTasks[taskId]) {
       if (this.globalConfig.debug) {
-        console.warn(`【LwuRequest Debug】请求ID${options.task_id}有重复项已自动过滤`);
+        console.warn(`【LwuRequest Debug】请求ID${taskId}有重复项已自动过滤`);
       }
 
-      requestTasks[options?.task_id]?.abort();
+      requestTasks[taskId]?.abort();
     }
 
     return new Promise(async (resolve, reject) => {
@@ -234,7 +236,7 @@ export class Http {
             dev: multiOptions.domain ?? this.globalConfig?.baseUrl.dev,
             pro: multiOptions.domain ?? this.globalConfig?.baseUrl.pro
           }
-        }).then(() => {
+        }).then(async () => {
           // 拦截器
           const chain = interceptor({
             request: (options: any) => {
@@ -304,7 +306,12 @@ export class Http {
                 }
               }
 
-              if (res.statusCode !== this.globalConfig.tokenExpiredCode) {
+              let tokenExpiredCode = res.statusCode;
+              if (this.globalConfig?.tokenExpiredCodeType === 'apiResponseCode' && this.globalConfig.tokenExpiredCode) {
+                tokenExpiredCode = this.globalConfig.tokenExpiredCode;
+              }
+
+              if (tokenExpiredCode !== this.globalConfig.tokenExpiredCode) {
                 resolve(res.data);
               } else {
                 // 刷新token
@@ -335,11 +342,16 @@ export class Http {
             }
           });
 
+          let taskId = multiOptions?.task_id ?? '';
+          if (this.globalConfig.taskIdValue) {
+            taskId = await this.globalConfig.taskIdValue(data, options) as string;
+          }
+
           // 判断是否设置请求队列ID
-          if (multiOptions?.task_id) {
+          if (taskId) {
             // 当前请求存入缓存
             let tasks: UniApp.RequestTask[] = [];
-            tasks[multiOptions?.task_id as any] = this.currentRequestTask;
+            tasks[taskId as any] = this.currentRequestTask;
             uni.setStorageSync(this.requestTasksName, tasks);
           }
         });

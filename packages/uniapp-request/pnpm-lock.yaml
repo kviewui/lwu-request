@@ -1,19 +1,19 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@dcloudio/types': ^3.2.11
-  '@types/node': ^18.15.8
+lockfileVersion: '6.0'
 
 devDependencies:
-  '@dcloudio/types': 3.2.11
-  '@types/node': 18.15.8
+  '@dcloudio/types':
+    specifier: ^3.2.11
+    version: 3.2.11
+  '@types/node':
+    specifier: ^18.15.8
+    version: 18.15.8
 
 packages:
 
-  /@dcloudio/types/3.2.11:
+  /@dcloudio/types@3.2.11:
     resolution: {integrity: sha512-Ws+pUiQMvCcSjg0soF+vTTwwsdNlK/1cxIfo5LBBDFPoXfUAAh6k9HnCt5cudERNhY0M3wE7ATMx/1Cb9bmUig==}
     dev: true
 
-  /@types/node/18.15.8:
+  /@types/node@18.15.8:
     resolution: {integrity: sha512-kzGNJZ57XEH7RdckxZ7wfRjB9hgZABF+NLgR1B2zogUvV0gmK0/60VYA4yb4oKZckPiiJlmmfpdqTfCN0VRX+Q==}
     dev: true

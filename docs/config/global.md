@@ -137,6 +137,15 @@ apiErrorInterception: (data: Data, args?: UniApp.RequestSuccessCallbackResult) =
     + 缓存中token字段名称，方便请求库从缓存获取token完成自动填充token。
     + `1.0.2` 及以上版本已废弃，请使用 `tokenValue` 属性代替。
 
+## taskIdValue
++ **类型**: `(data: any, options?: object) => Promise<unknown>`
++ **默认值**: `undefined`
++ **是否必填**: 否
++ **描述**:
+    + 自定义获取task_id处理程序，通过promise返回最新task_id值即可。
+    + 设置该配置项后 `task_id` 将失效。
+    + `1.5.11` 及以上版本支持
+
 ## tokenValue
 + **类型**: `() => Promise<unknown>`
 + **默认值**: `undefined`;
@@ -210,6 +219,14 @@ buildQueryString: (params?: object) => {
 + **默认值**: `403`
 + **是否必填**: 否
 + **描述**: 自定义token失效的错误代码，便于请求库内部做自动刷新token判断
+
+## tokenExpiredCodeType
++ **类型**: `'httpStatusCode' | 'apiResponseCode'`
++ **默认值**: `'httpStatusCode'`
++ **是否必填**: 否
++ **描述**: token失效错误代码类型，支持 `httpStatusCode` 和 `apiResponseCode`，默认为 `httpStatusCode`
+    + `httpStatusCode`: 原生http请求状态码
+    + `apiResponseCode`: 接口响应错误码
 
 ## retry
 + **类型**: `boolean`
@@ -420,6 +437,11 @@ ___
      */
     tokenStorageKeyName: '',
     /**
+     * 自定义获取task_id处理程序，通过promise返回最新task_id值即可
+     * + `1.5.11` 及以上版本支持
+     */
+    taskIdValue: undefined,
+    /**
      * 自定义获取token处理程序，通过promise返回最新token值即可
      * + `1.0.2` 及以上版本支持
      * @returns 
@@ -468,6 +490,14 @@ ___
      * 自定义token失效的错误代码，便于请求库内部做自动刷新token判断
      */
     tokenExpiredCode: 403,
+    /**
+     * token失效错误代码类型，支持 `httpStatusCode` 和 `apiResponseCode`，默认为 `httpStatusCode`
+     * + `httpStatusCode`: 原生http请求状态码
+     * + `apiResponseCode`: 接口响应错误码
+     * 
+     * + `1.5.11` 及以上版本支持
+     */
+    tokenExpiredCodeType: 'httpStatusCode',
 	/**
      * 请求失败是否自动重试
      */
