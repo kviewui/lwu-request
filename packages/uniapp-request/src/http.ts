@@ -17,7 +17,7 @@ interface MultiOptions extends RequestOptions { };
  * - 3.请求失败，等待2 + random_number_milliseconds秒后重试请求。
  * - 4.请求失败，等待4 + random_number_milliseconds秒后重试请求。
  * - 5.以此类推，直至达到设置的等待时间上限为止结束请求，具体算法公式如下：
- *  Math.min((2 ** n + ranom_number_milliseconds), maxium_backoff)  
+ *  Math.min((2 ** n + ranom_number_milliseconds), maxium_backoff)
  * 上述的random_number_milliseconds为1到1000的随机毫秒数
  */
 const makeRetryTimeout = (times: number, maximum_offretry: number): number => {
@@ -87,14 +87,14 @@ export class Http {
     },
     /**
      * 业务错误代码拦截处理程序，请根据业务实际情况灵活设置
-     * @param code 
-     * @param errMsg 
-     * @returns 
+     * @param code
+     * @param errMsg
+     * @returns
      */
     errorHandleByCode: (code: number, errMsg?: string) => { },
     /**
      * API错误拦截处理程序，请根据业务实际情况灵活设置
-     * @param data 
+     * @param data
      */
     apiErrorInterception: (data: any) => { },
   };
@@ -142,7 +142,7 @@ export class Http {
   /**
    * 请求失败的错误统一处理
    * @param code - 错误码
-   * @param message - 自定义错误信息 
+   * @param message - 自定义错误信息
    */
   private handleError(code: number, message: string = ''): void {
     // 调用错误状态码处理程序
@@ -171,7 +171,11 @@ export class Http {
   private beforeRequest(data: any = {}, options?: MultiOptions) {
     // 判断该请求队列是否存在，如果存在则中断请求
     const requestTasks = uni.getStorageSync(this.requestTasksName);
-
+    if (this.globalConfig.taskIdValue) {
+      this.globalConfig.taskIdValue(data, options).then(res => {
+        options?.task_id = res
+      })
+    }
     if (options?.task_id && requestTasks[options?.task_id]) {
       if (this.globalConfig.debug) {
         console.warn(`【LwuRequest Debug】请求ID${options.task_id}有重复项已自动过滤`);
@@ -373,7 +377,7 @@ export class Http {
 
   /**
    * 设置请求配置信息，方便链式调用
-   * @param options 
+   * @param options
    */
   public config(options: RequestOptions = {}) {
     this.reqConfig = {
@@ -386,7 +390,7 @@ export class Http {
 
   /**
    * 设置请求头信息，方便链式调用
-   * @param header 
+   * @param header
    */
   public setHeader(header: object) {
     this.reqConfig.header = {
@@ -398,7 +402,7 @@ export class Http {
 
   /**
    * 中断请求，不传 `task_id` 时默认中断当前任务
-   * @param task_id 
+   * @param task_id
    */
   public abort(task_id: string = '') {
     const requestTask = uni.getStorageSync(this.requestTasksName);
@@ -412,7 +416,7 @@ export class Http {
 
   /**
    * 文件下载
-   * @param params 
+   * @param params
    */
   public download(params: DownloadParams) {
     const multiOptions = {
@@ -469,7 +473,7 @@ export class Http {
 
   /**
    * 普通文件上传
-   * @param params 
+   * @param params
    */
   public upload(params: UploadParams) {
     const multiOptions = {
@@ -532,7 +536,7 @@ export class Http {
 
   /**
    * 阿里云OSS直传，同步上传
-   * @param options 
+   * @param options
    */
   public async uploadAliossSync(options: UploadAliossOptions) {
     const aliyunOSSUploader = new UploadAlioss({
@@ -552,7 +556,7 @@ export class Http {
 
   /**
    * 阿里云OSS直传，异步上传
-   * @param options 
+   * @param options
    */
   public uploadAlioss(options: UploadAliossOptions) {
     const aliyunOSSUploader = new UploadAlioss({
