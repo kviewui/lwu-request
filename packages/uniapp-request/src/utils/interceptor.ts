@@ -1,5 +1,7 @@
+import path from 'path';
 import type { Config, RequestOptions } from '../types';
 import { loading } from '../utils/prompt';
+import { CONNECT_ERROR_CODE, NETWORK_TIMEOUT_CODE, URL_NOT_FOUND_CODE } from './constant';
 
 /**
  * 对象转query string的参数字符串
@@ -27,14 +29,25 @@ export function interceptor(chain: any, params: Params, config: Config) {
      * @param message - 自定义错误信息 
      */
     const handleError = (code: number, message: string = ''): void => {
-        // 调用错误状态码处理程序
+        /**
+         * 调用错误状态码处理程序
+         */
         config.errorHandleByCode && config.errorHandleByCode(code, message);
+        // if (code === CONNECT_ERROR_CODE) {
+        //     // 客户端断网处理
+        //     if (config.networkExceptionHandle) {
+        //         console.log('断网自定义处理1111');
+        //         config.networkExceptionHandle(code);
+        //     }
+        // } else {
+        //     config.errorHandleByCode && config.errorHandleByCode(code, message);
+        // }
     }
 
     const invoke = (options: { header: { [x: string]: any; contentType?: any; }; method: string; data: string | object; url: string; }) => {
         // 请求前拦截处理
         if (config.debug) {
-            console.warn(`【LwuRequest Debug:请求拦截】${JSON.stringify(options)}`);
+            console.warn(`【LwuRequest Debug】请求拦截:${JSON.stringify(options)}`);
         }
 
         const isLoading = params.loading ?? config.loading;
@@ -62,6 +75,9 @@ export function interceptor(chain: any, params: Params, config: Config) {
         //     baseURI = params.domain;
         // }
         let reqUrl = `${baseURI}${params.url}`;
+        if (params.url && (params.url?.indexOf('http://') > -1 || params.url?.indexOf('https://') > -1)) {
+            reqUrl = params.url;
+        }
         if (options.method === 'GET') {
             options.data = config.buildQueryString && config.buildQueryString(options.data as object)
                 ? config.buildQueryString(options.data as object)
@@ -87,7 +103,7 @@ export function interceptor(chain: any, params: Params, config: Config) {
         // config.apiErrorInterception && config.apiErrorInterception(response.data, response);
 
         if (config.debug) {
-            console.warn(`【LwuRequest Debug:响应拦截】${JSON.stringify(response)}`);
+            console.warn(`【LwuRequest Debug】响应拦截:${JSON.stringify(response)}`);
         }
 
         if (params.after) {
@@ -98,17 +114,28 @@ export function interceptor(chain: any, params: Params, config: Config) {
     };
 
     const fail = (err: UniApp.GeneralCallbackResult) => {
-        handleError(404, err.errMsg);
+        if (err.errMsg === 'request:fail') {
+            // 客户端断网
+            handleError(CONNECT_ERROR_CODE, err.errMsg);
+        } else if (err.errMsg === 'request:fail timeout') {
+            // 请求超时
+            handleError(NETWORK_TIMEOUT_CODE, err.errMsg);
+        } else {
+            handleError(URL_NOT_FOUND_CODE, err.errMsg);
+        }
         if (config.debug) {
-            console.warn(`【LwuRequest Debug:请求拦截失败】${JSON.stringify(err)}`);
+            console.warn(`【LwuRequest Debug】请求拦截失败:${JSON.stringify(err)}`);
         }
         return err;
     };
 
     const complete = (res: UniApp.GeneralCallbackResult) => {
         uni.hideLoading();
+        if (res.errMsg === 'request:fail') {
+            config.networkExceptionHandle && config.networkExceptionHandle();
+        }
         if (config.debug) {
-            console.warn(`【LwuRequest Debug:请求拦截完成】${JSON.stringify(res)}`);
+            console.warn(`【LwuRequest Debug】请求拦截完成:${JSON.stringify(res)}`);
         }
 
     };

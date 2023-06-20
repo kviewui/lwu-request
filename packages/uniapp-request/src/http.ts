@@ -168,7 +168,7 @@ export class Http {
     }
   }
 
-  private async beforeRequest(data: any = {}, options?: MultiOptions) {
+  private async beforeRequest(data: any = {}, options?: MultiOptions, callback: any = null) {
     // 判断该请求队列是否存在，如果存在则中断请求
     const requestTasks = uni.getStorageSync(this.requestTasksName);
     let taskId = options?.task_id ?? '';
@@ -191,10 +191,21 @@ export class Http {
       let token = uni.getStorageSync(this.globalConfig.tokenStorageKeyName as string);
 
       const setToken = () => {
-        return new Promise((resolve, _) => {
+        return new Promise(async (resolve, _) => {
           token && resolve(token);
 
+          // 获取旧的token
+          let refreshToken = '';
           if (this.globalConfig.tokenValue) {
+            refreshToken = await this.globalConfig.tokenValue();
+          }
+
+          if (callback && this.globalConfig.refreshTokenHandle) {
+            this.globalConfig.refreshTokenHandle(refreshToken).then((newToken) => {
+              newToken && resolve(newToken);
+              resolve(false);
+            });
+          } else if (this.globalConfig.tokenValue) {
             this.globalConfig.tokenValue().then(res => {
               res && resolve(res);
               resolve(false);
@@ -222,7 +233,7 @@ export class Http {
     });
   }
 
-  public request(url: string, data: any = {}, options: RequestOptions) {
+  public request(url: string, data: any = {}, options: RequestOptions, callback: any = null) {
     let multiOptions = {
       ...this.reqConfig,
       ...options
@@ -236,7 +247,7 @@ export class Http {
             dev: multiOptions.domain ?? this.globalConfig?.baseUrl.dev,
             pro: multiOptions.domain ?? this.globalConfig?.baseUrl.pro
           }
-        }).then(async () => {
+        }, callback).then(async () => {
           // 拦截器
           const chain = interceptor({
             request: (options: any) => {
@@ -307,34 +318,46 @@ export class Http {
               }
 
               let tokenExpiredCode = res.statusCode;
-              if (this.globalConfig?.tokenExpiredCodeType === 'apiResponseCode' && this.globalConfig.tokenExpiredCode && this.globalConfig.xhrCodeName) {
+              if (this.globalConfig?.tokenExpiredCodeType === 'apiResponseCode' && typeof this.globalConfig.tokenExpiredCode !== undefined && this.globalConfig.xhrCodeName) {
                 tokenExpiredCode = (res.data as any)[this.globalConfig.xhrCodeName];
+              }
+
+              if (callback) {
+                this.globalConfig.debug && console.warn(`【LwuRequest Debug】token失效二次请求成功响应:${JSON.stringify(res.data)}`);
+                callback(res.data);
+                return;
               }
 
               if (tokenExpiredCode !== this.globalConfig.tokenExpiredCode) {
                 resolve(res.data);
               } else {
                 // 刷新token
-                this.refreshToken();
-                uni.setStorageSync('LWU-REQUEST-CALLBACK', () => {
-                  resolve(this.request(url, data, multiOptions));
-                });
+                this.globalConfig.debug && console.warn(`【LwuRequest Debug】token失效，开始执行刷新token程序`);
+
+                if (this.globalConfig.refreshTokenHandle) {
+                  this.globalConfig.refreshTokenHandle().then((newToken) => {
+                    this.globalConfig.debug && console.warn(`【LwuRequest Debug】新的token:${newToken}`);
+                    this.globalConfig.debug && console.warn(`【LwuRequest Debug】自动刷新token完成，开始重新发起请求`);
+                    this.request(url, data, multiOptions, resolve);
+                  });
+                }
               }
             },
             fail: (err: UniApp.GeneralCallbackResult) => {
               chain.fail(err);
-              reject(err);
               this.retryCount = multiOptions.retryCount ?? 3;
 
               if (this.retryCount) {
                 if (this.globalConfig.debug) {
-                  console.warn(`【LwuRequest Debug】自动重试次数：${this.retryCount}`);
+                  console.warn(`【LwuRequest Debug】自动重试次数:${this.retryCount}`);
                 }
                 this.retryCount--;
                 setTimeout(this.request, this.retryTimeout.shift());
                 // 网络异常或者断网处理
                 this.globalConfig.networkExceptionHandle && this.globalConfig.networkExceptionHandle();
               }
+
+              reject(err);
             },
             complete: (res: UniApp.GeneralCallbackResult) => {
               chain.complete(res);
@@ -398,6 +421,18 @@ export class Http {
     };
 
     return this;
+  }
+
+  /**
+   * 获取请求域名
+   */
+  public uri(): string {
+    let url = this.reqConfig.domain || this.globalConfig.baseUrl.pro;
+    if (process.env.NODE_ENV === 'development') {
+      url = this.reqConfig.domain || this.globalConfig.baseUrl.dev;
+    }
+
+    return url;
   }
 
   /**

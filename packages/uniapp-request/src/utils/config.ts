@@ -67,7 +67,7 @@ export const useConfig = (config: Config) => {
         firstIpv4: config.firstIpv4 ?? false,
         /**
          * 业务错误代码拦截处理程序，请根据业务实际情况灵活设置
-         * @param code 
+         * @param code http网络状态码，其中 `404` 为请求地址未找到、`408` 为请求超时、`1009` 为客户端网络不可用
          * @param errMsg 
          * @returns 
          */
@@ -78,6 +78,7 @@ export const useConfig = (config: Config) => {
         apiErrorInterception: config.apiErrorInterception,
         /**
          * 网络异常或者断网处理程序，建议更新缓存中是否断网或者网络繁忙的标识以便前端页面展示没有网络或者断网的通用异常页面
+         * + 保留参数，`v1.6.1` 版本开始断网判断通过 `errorHandleByCode` 处理，见[如何自定义断网场景](https://lwur.fdproxy.cn/advanced.html#如何自定义断网场景)
          * @returns
          */
         networkExceptionHandle: () => {},
