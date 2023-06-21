@@ -66,7 +66,7 @@ interface Config {
     firstIpv4?: boolean;
     /**
      * 网络错误代码拦截处理程序，请根据业务实际情况灵活设置
-     * @param code
+     * @param code http网络状态码，其中 `404` 为请求地址未找到、`408` 为请求超时、`1009` 为客户端网络不可用
      * @param errMsg
      * @returns
      */
@@ -90,9 +90,10 @@ interface Config {
     xhrCodeName?: string;
     /**
      * 网络异常或者断网处理程序，建议更新缓存中是否断网或者网络繁忙的标识以便前端页面展示没有网络或者断网的通用异常页面
+     * + 保留参数，`v1.6.1` 版本开始断网判断通过 `errorHandleByCode` 处理，见[如何自定义断网场景](https://lwur.fdproxy.cn/advanced.html#如何自定义断网场景)
      * @returns
      */
-    networkExceptionHandle?: () => void;
+    networkExceptionHandle?: (code?: number) => void;
     /**
      * 请求成功时接口响应描述信息字段名称，默认为 `'msg'`
      */
@@ -112,7 +113,7 @@ interface Config {
      * + `1.0.2` 及以上版本支持
      * @returns
      */
-    tokenValue?: () => Promise<unknown>;
+    tokenValue?: () => Promise<string>;
     /**
      * 自定义构建URL参数方式，即用什么方式把请求的params对象数据转为`a=1&b=2`的格式，默认使用NodeJS内置对象 `URLSearchParams` 转化，可以自定义通过 `qs` 插件的方式转化
      * + `1.0.2` 及以上版本支持
@@ -140,8 +141,9 @@ interface Config {
     autoRefreshToken?: boolean;
     /**
      * 自动刷新token程序，返回promise，`autoRefreshToken` 为 `true`时生效
+     * + `refreshToken` 为旧的token返回
      */
-    refreshTokenHandle?: () => Promise<unknown>;
+    refreshTokenHandle?: (refreshToken?: string) => Promise<string>;
     /**
      * 自定义token失效的错误代码，便于请求库内部做自动刷新token判断
      */
@@ -487,7 +489,7 @@ declare class Http {
      */
     private refreshToken;
     private beforeRequest;
-    request(url: string, data: any, options: RequestOptions): Promise<unknown>;
+    request(url: string, data: any, options: RequestOptions, callback?: any): Promise<unknown>;
     get(url: string, data?: object, options?: RequestOptions): Promise<unknown>;
     post(url: string, data?: object, options?: RequestOptions): Promise<unknown>;
     put(url: string, data?: object, options?: RequestOptions): Promise<unknown>;
@@ -497,6 +499,10 @@ declare class Http {
      * @param options
      */
     config(options?: RequestOptions): this;
+    /**
+     * 获取请求域名
+     */
+    uri(): string;
     /**
      * 设置请求头信息，方便链式调用
      * @param header
