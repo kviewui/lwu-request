@@ -49,6 +49,7 @@ outline: deep
 + **默认值**: `(code: number, errMsg?: string) => {}`
 + **是否必填**: 否
 + **描述**: 业务错误代码拦截处理程序，请根据业务实际情况灵活设置
+    + `code` 参数为http网络状态码，其中 `404` 为请求地址未找到、`408` 为请求超时、`1009` 为客户端网络不可用
 + **示例**: 
 ```ts
 errorHandleByCode: (code: number, errMsg?: string) => {
@@ -147,7 +148,7 @@ apiErrorInterception: (data: Data, args?: UniApp.RequestSuccessCallbackResult) =
     + `1.5.11` 及以上版本支持
 
 ## tokenValue
-+ **类型**: `() => Promise<unknown>`
++ **类型**: `() => Promise<string>`
 + **默认值**: `undefined`;
 + **是否必填**: 否
 + **描述**: 

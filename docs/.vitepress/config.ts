@@ -10,7 +10,7 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '文档', link: '/intro' },
       { 
-        text: '1.5.11',
+        text: '1.6.1',
         items: [
           {  text: '更新日志', link: 'changelog'},
           { text: '开源贡献', link: '/convention/contributing'},
@@ -28,6 +28,7 @@ export default defineConfig({
         items: [
           { text: '介绍', link: '/intro' },
           { text: '快速上手', link: '/start' },
+          { text: '进阶使用', link: '/advanced' },
           { text: '更新日志', link: '/changelog' },
           { text: '常见问题', link: '/faq' }
         ]
@@ -45,7 +46,8 @@ export default defineConfig({
           { text: 'upload', link: '/api/upload' },
           { text: 'aliyun', link: '/api/aliyun' },
           { text: 'download', link: '/api/download' },
-          { text: 'setHeader', link: '/api/setHeader' }
+          { text: 'setHeader', link: '/api/setHeader' },
+          { text: 'uri', link: '/api/uri' }
         ]
       },
       {

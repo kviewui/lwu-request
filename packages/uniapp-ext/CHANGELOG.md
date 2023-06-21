@@ -1,3 +1,19 @@
+## 1.6.1  (2023-06-21)
++ 修复 `refreshTokenHandle` 执行后没有自动发起请求的bug。
++ 优化自动刷新token的实现，开发者不再需要手动处理token，示例如下：
+
+```ts
+refreshTokenHandle: (refreshToken?: string) => {
+	// 打印旧的Token
+    console.log(refreshToken, '旧的token');
+	return new Promise((resolve, reject) => {
+		// 模拟获取新的token
+		resolve('FbLKVJLO6PLrPxzZeXOa67ftPmdvXywm8vU4y59HbWY=');
+	});
+}
+```
++ 新增 `uri` API方法。[详情](https://lwur.fdproxy.cn/api/uri.html)。
+
 ## 1.5.11 (2023-06-07)
 + 新增 `taskIdValue` 自定义获取task_id处理程序配置项。[详情](https://github.com/kviewui/lwu-request/pull/11)，[文档地址](https://lwur.fdproxy.cn/config/global.html#taskidvalue)
 + 新增 `tokenExpiredCodeType` token失效错误代码类型配置项。[文档地址](https://lwur.fdproxy.cn/config/global.html#tokenexpiredcodetype)

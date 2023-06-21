@@ -165,3 +165,6 @@ const request = new Http({
 ├─ main.ts
 ├─ global.d.ts
 ```
+
+## 进阶使用
+更多进阶玩法请参考 [进阶使用](/advanced)

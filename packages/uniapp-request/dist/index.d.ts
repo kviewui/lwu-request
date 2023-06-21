@@ -141,8 +141,9 @@ interface Config {
     autoRefreshToken?: boolean;
     /**
      * 自动刷新token程序，返回promise，`autoRefreshToken` 为 `true`时生效
+     * + `refreshToken` 为旧的token返回
      */
-    refreshTokenHandle?: (refreshToken?: string) => Promise<unknown>;
+    refreshTokenHandle?: (refreshToken?: string) => Promise<string>;
     /**
      * 自定义token失效的错误代码，便于请求库内部做自动刷新token判断
      */

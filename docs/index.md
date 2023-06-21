@@ -5,7 +5,7 @@ layout: home
 hero:
   name: "LWU-REQUEST"
   text: "基于uniapp网络请求API封装的轻量级网络请求库"
-  tagline: 支持自动刷新token，请求拦截，请求中断，自动重试等特性
+  tagline: 支持自动刷新token，请求拦截，请求中断，自动重试等特性，始终秉持开发者高度自由化的原则
   actions:
     - theme: brand
       text: 快速上手
