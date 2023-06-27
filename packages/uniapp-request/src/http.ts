@@ -311,10 +311,14 @@ export class Http {
               if (typeof this.globalConfig.xhrCode === 'undefined') {
                 this.globalConfig.apiErrorInterception && this.globalConfig.apiErrorInterception(res.data, res);
               } else {
-                if (this.globalConfig.xhrCodeName && (res.data as any)[this.globalConfig.xhrCodeName] && (res.data as any)[this.globalConfig.xhrCodeName] !== this.globalConfig.xhrCode) {
-                  this.globalConfig.apiErrorInterception && this.globalConfig.apiErrorInterception(res.data, res);
-                  reject(res);
-                }
+                if (
+									this.globalConfig.xhrCodeName &&
+									(res.data as any)[this.globalConfig.xhrCodeName] !== 'undefined' &&
+									(res.data as any)[this.globalConfig.xhrCodeName] !== this.globalConfig.xhrCode
+								) {
+									this.globalConfig.apiErrorInterception && this.globalConfig.apiErrorInterception(res.data, res);
+									reject(res);
+								}
               }
 
               let tokenExpiredCode = res.statusCode;
