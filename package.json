@@ -18,6 +18,7 @@
   "private": "true",
   "devDependencies": {
     "@dcloudio/types": "^3.3.3",
+    "@types/axios": "^0.14.0",
     "@types/node": "^20.2.3"
   }
 }

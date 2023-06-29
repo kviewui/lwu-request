@@ -1,3 +1,7 @@
+## 1.6.2  (2023-06-28)
++ 修复 `xhrCode` 非0，`xhrCodeName` 等于0的情况下，非预期结果的bug。[详情](https://github.com/kviewui/lwu-request/pull/13)
++ 优化其他一些已知问题。
+
 ## 1.6.1  (2023-06-21)
 + 修复 `refreshTokenHandle` 执行后没有自动发起请求的bug。
 + 优化自动刷新token的实现，开发者不再需要手动处理token，示例如下：
