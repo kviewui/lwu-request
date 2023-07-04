@@ -98,6 +98,14 @@ outline: deep
 + **描述**：自定义请求域名，用于设置单次请求的域名地址，常用于上传下载场景。
     + `1.4.10` 及以上版本支持
 
+## autoTakeToken
++ **类型**：`boolean`
++ **默认值**：`true`
++ **是否必填**：否
++ **描述**：是否自动携带 `token`，可用于设置单个请求不自动携带token场景。
+    + `1.6.3` 及以上版本支持
+    + 由于 `config` API链式调用会覆盖全局的请求配置，所以建议通过[参数设置方式](/config/request#参数设置方式)设置；如果是通过[API设置方式](/config/request#API设置方式)设置的参数，需要手动重新设置为初始设置内容，不然该请求单独设置的配置项将会影响后面所有的请求配置项。
+
 ## 使用示例
 **请求配置支持 `参数设置` 和 `API设置` 两种方式供开发者选择使用，具体参考下面示例。**
 ::: danger 注意事项
@@ -122,7 +130,9 @@ request.request('/user/save', {
     firstIpv4: false,
     retryCount: 3,
     loading: true,
-    loadingText: '加载中...'
+    loadingText: '加载中...',
+    domain: '',
+    autoTakeToken: true
 })
 	.then((res) => {
 		// 此处可自定义业务逻辑
@@ -134,6 +144,10 @@ request.request('/user/save', {
 ```
 
 + #### API设置方式
+::: danger 注意事项
++ API设置方式原理是在请求类里面增加了全局的请求参数变量，所以通过API设置方式设置的参数都会影响所有的请求配置项，需要手动重新设置为默认参数。
+:::
+
 ```ts
 request
     .config({
@@ -150,7 +164,9 @@ request
         firstIpv4: false,
         retryCount: 3,
         loading: true,
-        loadingText: '加载中...'
+        loadingText: '加载中...',
+        domain: '',
+        autoTakeToken: true
     })
     .post('/user/save', {
 	    user_id: 1

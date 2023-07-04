@@ -10,7 +10,7 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '文档', link: '/intro' },
       { 
-        text: '1.6.2',
+        text: '1.6.3',
         items: [
           {  text: '更新日志', link: 'changelog'},
           { text: '开源贡献', link: '/convention/contributing'},

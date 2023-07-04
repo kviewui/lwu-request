@@ -1,4 +1,4 @@
-import { loading, useConfig, interceptor } from './utils';
+import { loading, useConfig, interceptor, useReqConfig } from './utils';
 // import qs from 'qs';
 import type { Config, RequestOptions, DownloadParams, UploadParams, DownloadSuccessResultCallback, UploadAliossOptions } from './types';
 import UploadAlioss from './utils/alioss';
@@ -197,7 +197,7 @@ export class Http {
           // 获取旧的token
           let refreshToken = '';
           if (this.globalConfig.tokenValue) {
-            refreshToken = await this.globalConfig.tokenValue();
+            refreshToken = await this.globalConfig.tokenValue() as string;
           }
 
           if (callback && this.globalConfig.refreshTokenHandle) {
@@ -217,7 +217,7 @@ export class Http {
       }
 
       setToken().then(getToken => {
-        if (getToken && options) {
+        if (getToken && options && options.autoTakeToken) {
           if (this.globalConfig.takeTokenMethod === 'header') {
             options.header = options.header ?? {};
             (options.header as any)[this.globalConfig?.takenTokenKeyName as string] = getToken;
@@ -235,6 +235,7 @@ export class Http {
 
   public request(url: string, data: any = {}, options: RequestOptions, callback: any = null) {
     let multiOptions = {
+      autoTakeToken: options.autoTakeToken || useReqConfig(options).autoTakeToken,
       ...this.reqConfig,
       ...options
     };
@@ -283,7 +284,7 @@ export class Http {
           chain.request({
             header: {
               // contentType: '',
-              ...options?.header
+              ...multiOptions.header
             },
             method: options?.method ?? 'GET',
             data,
@@ -420,7 +421,8 @@ export class Http {
    */
   public config(options: RequestOptions = {}) {
     this.reqConfig = {
-      ...this.reqConfig,
+      ...this.globalConfig,
+      autoTakeToken: options.autoTakeToken || useReqConfig(options).autoTakeToken,
       ...options
     };
 

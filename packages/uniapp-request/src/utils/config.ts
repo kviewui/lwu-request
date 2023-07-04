@@ -1,4 +1,6 @@
+import { config } from 'process';
 import type { Config } from '../types/config';
+import type { RequestOptions } from '../types/request';
 
 /**
  * 获取请求配置
@@ -185,3 +187,80 @@ export const useConfig = (config: Config) => {
         retryDeadline: config.retryDeadline ?? 10000
     }
 }
+
+/**
+ * 获取请求配置
+ * @param config 
+ */
+export const useReqConfig = (config: RequestOptions) => {
+    return {
+        /**
+         * 请求任务ID，一般在过滤重复请求，中止请求时使用
+         */
+        task_id: config.task_id ?? '',
+        /**
+         * 自定义请求前拦截
+         */
+        before: config.before,
+        /**
+         * 自定义请求后拦截
+         */
+        after: config.after,
+        /**
+         * 自定义请求头
+         */
+        header: config.header,
+        /**
+         * 请求方式
+         */
+        method: config.method ?? 'GET',
+        /**
+         * 请求超时时间
+         */
+        timeout: config.timeout ?? 6000,
+        /**
+         * 如果设为 json，会对返回的数据进行一次 JSON.parse，非 json 不会进行 JSON.parse
+         */
+        dataType: config.dataType ?? 'json',
+        /**
+         * 设置响应的数据类型。合法值：`text`、`arraybuffer`
+         */
+        responseType: config.responseType ?? 'text',
+        /**
+         * 验证 ssl 证书
+         */
+        sslVerify: config.sslVerify || false,
+        /**
+         * 跨域请求时是否携带凭证（cookies）
+         */
+        withCredentials: config.withCredentials || false,
+        /**
+         * DNS解析时优先使用ipv4
+         */
+        firstIpv4: config.firstIpv4 || false,
+        /**
+         * 请求失败自动重试次数
+         */
+        retryCount: config.retryCount ?? 3,
+        /**
+         * 请求过程是否显示loading
+         * + `1.3.0` 及以上版本支持
+         */
+        loading: config.loading || true,
+        /**
+         * 请求中loading弹窗的提示文本
+         * + `1.3.0` 及以上版本支持
+         */
+        loadingText: config.loadingText ?? '请求中...',
+        /**
+         * 自定义请求域名，用于设置单次请求的域名地址，常用于上传下载场景。
+         * + `1.4.10` 及以上版本支持
+         */
+        domain: config.domain ?? '',
+        /**
+         * 是否自动携带token，默认为 `true`
+         * + `1.6.3` 及以上版本支持
+         */
+        autoTakeToken: config.autoTakeToken || true
+    }
+};

@@ -113,7 +113,7 @@ interface Config {
      * + `1.0.2` 及以上版本支持
      * @returns
      */
-    tokenValue?: () => Promise<string>;
+    tokenValue?: () => Promise<unknown>;
     /**
      * 自定义构建URL参数方式，即用什么方式把请求的params对象数据转为`a=1&b=2`的格式，默认使用NodeJS内置对象 `URLSearchParams` 转化，可以自定义通过 `qs` 插件的方式转化
      * + `1.0.2` 及以上版本支持
@@ -243,6 +243,11 @@ interface RequestOptions {
      * + `1.4.10` 及以上版本支持
      */
     domain?: string;
+    /**
+     * 是否自动携带token，默认为 `true`
+     * + `1.6.3` 及以上版本支持
+     */
+    autoTakeToken?: boolean;
 }
 interface BeforeRequestCallbackResult {
     data?: any;

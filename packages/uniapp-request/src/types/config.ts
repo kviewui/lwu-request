@@ -114,7 +114,7 @@ export interface Config {
      * + `1.0.2` 及以上版本支持
      * @returns
      */
-    tokenValue?: () => Promise<string>;
+    tokenValue?: () => Promise<unknown>;
     /**
      * 自定义构建URL参数方式，即用什么方式把请求的params对象数据转为`a=1&b=2`的格式，默认使用NodeJS内置对象 `URLSearchParams` 转化，可以自定义通过 `qs` 插件的方式转化
      * + `1.0.2` 及以上版本支持

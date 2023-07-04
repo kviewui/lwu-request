@@ -1,3 +1,7 @@
+## 1.6.3  (2023-07-04)
++ 请求配置增加 `autoTakeToken` 是否自动携带 `token` 配置项。[详情](https://lwur.fdproxy.cn/config/request.html#autotaketoken)
++ 优化其他一些已知问题。
+
 ## 1.6.2  (2023-06-28)
 + 修复 `xhrCode` 非0，`xhrCodeName` 等于0的情况下，非预期结果的bug。[详情](https://github.com/kviewui/lwu-request/pull/13)
 + 优化其他一些已知问题。

@@ -64,6 +64,11 @@ export interface RequestOptions {
      * + `1.4.10` 及以上版本支持
      */
     domain?: string;
+    /**
+     * 是否自动携带token，默认为 `true`
+     * + `1.6.3` 及以上版本支持
+     */
+    autoTakeToken?: boolean;
 };
 
 export interface BeforeRequestCallbackResult {
