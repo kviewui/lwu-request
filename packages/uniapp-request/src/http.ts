@@ -168,7 +168,7 @@ export class Http {
     }
   }
 
-  private async beforeRequest(data: any = {}, options?: MultiOptions, callback: any = null) {
+  private async beforeRequest(data: any = {}, options?: MultiOptions, callback: any = null, url: string = '') {
     // 判断该请求队列是否存在，如果存在则中断请求
     const requestTasks = uni.getStorageSync(this.requestTasksName);
     let taskId = options?.task_id ?? '';
@@ -217,7 +217,7 @@ export class Http {
       }
 
       setToken().then(getToken => {
-        if (getToken && options && options.autoTakeToken) {
+        if (typeof getToken === 'string' && options && options.autoTakeToken) {
           if (this.globalConfig.takeTokenMethod === 'header') {
             options.header = options.header ?? {};
             (options.header as any)[this.globalConfig?.takenTokenKeyName as string] = getToken;
@@ -248,7 +248,7 @@ export class Http {
             dev: multiOptions.domain ?? this.globalConfig?.baseUrl.dev,
             pro: multiOptions.domain ?? this.globalConfig?.baseUrl.pro
           }
-        }, callback).then(async () => {
+        }, callback, url).then(async () => {
           // 拦截器
           const chain = interceptor({
             request: (options: any) => {

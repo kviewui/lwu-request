@@ -1,3 +1,7 @@
+## 1.6.4  (2023-07-05)
++ 修复 `header` 默认的 `Authorization` 自动携带参数为 `true` 的bug。
++ 修复 `autoTakeToken` 对 `header` 参数方式无效的bug。
+
 ## 1.6.3  (2023-07-04)
 + 请求配置增加 `autoTakeToken` 是否自动携带 `token` 配置项。[详情](https://lwur.fdproxy.cn/config/request.html#autotaketoken)
 + 优化其他一些已知问题。
