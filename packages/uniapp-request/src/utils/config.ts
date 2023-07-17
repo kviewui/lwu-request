@@ -188,7 +188,7 @@ export const useConfig = (config: Config) => {
         /**
          * `loading` 动画请求多久后开始展示，单位毫秒
          * + 仅支持请求库默认动画
-         * + `1.6.0` 及以上版本支持
+         * + `1.7.0` 及以上版本支持
          */
         loadingStartTime: config.loadingStartTime ?? 0
     }
