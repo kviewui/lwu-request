@@ -103,7 +103,7 @@ apiErrorInterception: (data: Data, args?: UniApp.RequestSuccessCallbackResult) =
 ```
 
 ## xhrCode
-+ **类型**: `number`
++ **类型**: `'number' | 'string'`
 + **默认值**: ` `
 + **是否必填**: 否
 + **描述**: API成功状态码
@@ -216,7 +216,7 @@ buildQueryString: (params?: object) => {
     + `autoRefreshToken` 为 `true`时生效
 
 ## tokenExpiredCode
-+ **类型**: `number`
++ **类型**: `'number' | 'string'`
 + **默认值**: `403`
 + **是否必填**: 否
 + **描述**: 自定义token失效的错误代码，便于请求库内部做自动刷新token判断

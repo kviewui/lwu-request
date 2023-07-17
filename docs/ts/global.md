@@ -88,7 +88,7 @@ interface Config {
      * + `1.2.0` 及以上版本支持
      * + 设置该参数后，API业务失败时将直接抛出异常，开发者需要在 `catch` 中捕获API返回的错误信息，或者在 `apiErrorInterception` 中统一捕获API返回的错误信息
      */
-    xhrCode?: number;
+    xhrCode?: number | string;
     /**
      * 语义化接口响应状态码字段名称，一般为 `code`
      * + `1.2.0` 及以上版本支持
@@ -153,7 +153,7 @@ interface Config {
     /**
      * 自定义token失效的错误代码，便于请求库内部做自动刷新token判断
      */
-    tokenExpiredCode?: number;
+    tokenExpiredCode?: number | string;
     /**
      * token失效错误代码类型，支持 `httpStatusCode` 和 `apiResponseCode`，默认为 `httpStatusCode`
      * + `httpStatusCode`: 原生http请求状态码
