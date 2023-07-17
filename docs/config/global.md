@@ -276,6 +276,14 @@ buildQueryString: (params?: object) => {
 + **描述**: 自定义请求后拦截。
     + `1.3.12` 及以上版本支持。
     + `1.4.13` 及以上版本增加返回结果。[返回结果定义](/ts/interceptor.html#after-请求后拦截返回类型定义)
+
+## loadingStartTime
++ **类型**: `number`
++ **默认值**: `0`
++ **是否必填**: 否
++ **描述**: `loading` 动画请求多久后开始展示，单位毫秒
+    + 仅支持请求库默认动画
+    + `1.6.0` 及以上版本支持
 ___
 ::: tip
 下面配置项参考 [uniapp 网络请求API](https://uniapp.dcloud.io/api/request/request.html)

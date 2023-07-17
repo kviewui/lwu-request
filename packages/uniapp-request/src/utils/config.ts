@@ -184,7 +184,13 @@ export const useConfig = (config: Config) => {
         /**
          * 请求失败执行重试时间上限（指数退避算法需要），达到上限后不再重试
          */
-        retryDeadline: config.retryDeadline ?? 10000
+        retryDeadline: config.retryDeadline ?? 10000,
+        /**
+         * `loading` 动画请求多久后开始展示，单位毫秒
+         * + 仅支持请求库默认动画
+         * + `1.6.0` 及以上版本支持
+         */
+        loadingStartTime: config.loadingStartTime ?? 0
     }
 }
 
