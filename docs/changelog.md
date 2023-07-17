@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.6.5  (2023-07-17)
++ 配置项 `xhrCode` 和 `tokenExpiredCode` 新增 `string` 类型，[详情](https://github.com/kviewui/lwu-request/issues/17)
++ 优化其他一些已知问题。
+
 ## 1.6.4  (2023-07-05)
 + 修复 `header` 默认的 `Authorization` 自动携带参数为 `true` 的bug。
 + 修复 `autoTakeToken` 对 `header` 参数方式无效的bug。
