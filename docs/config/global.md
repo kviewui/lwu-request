@@ -283,7 +283,7 @@ buildQueryString: (params?: object) => {
 + **是否必填**: 否
 + **描述**: `loading` 动画请求多久后开始展示，单位毫秒
     + 仅支持请求库默认动画
-    + `1.6.0` 及以上版本支持
+    + `1.7.0` 及以上版本支持
 ___
 ::: tip
 下面配置项参考 [uniapp 网络请求API](https://uniapp.dcloud.io/api/request/request.html)
