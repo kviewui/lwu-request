@@ -1,3 +1,27 @@
+## 1.7.0  (2023-07-27)
++ 新增 `env` 运行环境配置项，支持 `原生h5` 运行环境和 `原生微信小程序` 运行环境。[详情](https://lwur.fdproxy.cn/config/global.html#env)
++ `timeout` 配置项默认值调整为 `60 * 1000`。[详情](https://lwur.fdproxy.cn/config/global.html#timeout)
++ 新增 `loadingStartTime` 配置项。[详情](https://lwur.fdproxy.cn/config/global.html#loadingstarttime)
++ 优化 `after` 配置项。[详情](https://lwur.fdproxy.cn/config/global.html#after)
++ 优化 `before` 配置项。[详情](https://lwur.fdproxy.cn/config/global.html#before)
++ 优化其他一些已知问题。
+
+## 1.6.5  (2023-07-17)
++ 配置项 `xhrCode` 和 `tokenExpiredCode` 新增 `string` 类型，[详情](https://github.com/kviewui/lwu-request/issues/17)
++ 优化其他一些已知问题。
+
+## 1.6.4  (2023-07-05)
++ 修复 `header` 默认的 `Authorization` 自动携带参数为 `true` 的bug。
++ 修复 `autoTakeToken` 对 `header` 参数方式无效的bug。
+
+## 1.6.3  (2023-07-04)
++ 请求配置增加 `autoTakeToken` 是否自动携带 `token` 配置项。[详情](https://lwur.fdproxy.cn/config/request.html#autotaketoken)
++ 优化其他一些已知问题。
+
+## 1.6.2  (2023-06-28)
++ 修复 `xhrCode` 非0，`xhrCodeName` 等于0的情况下，非预期结果的bug。[详情](https://github.com/kviewui/lwu-request/pull/13)
++ 优化其他一些已知问题。
+
 ## 1.6.1  (2023-06-21)
 + 修复 `refreshTokenHandle` 执行后没有自动发起请求的bug。
 + 优化自动刷新token的实现，开发者不再需要手动处理token，示例如下：

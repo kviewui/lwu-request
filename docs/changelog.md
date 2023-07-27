@@ -1,5 +1,13 @@
 # 更新日志
 
+## 1.7.0  (2023-07-27)
++ 新增 `env` 运行环境配置项，支持 `原生h5` 运行环境和 `原生微信小程序` 运行环境。[详情](/config/global.html#env)
++ `timeout` 配置项默认值调整为 `60 * 1000`。[详情](/config/global.html#timeout)
++ 新增 `loadingStartTime` 配置项。[详情](/config/global.html#loadingstarttime)
++ 优化 `after` 配置项。[详情](/config/global.html#after)
++ 优化 `before` 配置项。[详情](/config/global.html#before)
++ 优化其他一些已知问题。
+
 ## 1.6.5  (2023-07-17)
 + 配置项 `xhrCode` 和 `tokenExpiredCode` 新增 `string` 类型，[详情](https://github.com/kviewui/lwu-request/issues/17)
 + 优化其他一些已知问题。

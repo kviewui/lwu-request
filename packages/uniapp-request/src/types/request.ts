@@ -28,11 +28,11 @@ export interface RequestOptions {
     /**
      * 如果设为 json，会对返回的数据进行一次 JSON.parse，非 json 不会进行 JSON.parse
      */
-    dataType?: string;
+    dataType?: string | 'json' | '其他';
     /**
      * 设置响应的数据类型。合法值：`text`、`arraybuffer`
      */
-    responseType?: string;
+    responseType?: string | 'text' | 'arraybuffer';
     /**
      * 验证 ssl 证书
      */
@@ -71,6 +71,9 @@ export interface RequestOptions {
     autoTakeToken?: boolean;
 };
 
+/**
+ * 请求前回调
+ */
 export interface BeforeRequestCallbackResult {
     data?: any;
     header?: any;
@@ -78,10 +81,93 @@ export interface BeforeRequestCallbackResult {
     url?: string;
 };
 
+/**
+ * 请求后回调
+ */
 export interface AfterRequestCallbackResult {
     data?: any;
     cookie?: any;
     errMsg?: string;
     header?: any;
     statusCode?: number;
+}
+
+/**
+ * 请求成功回调
+ * + `1.7.0` 及以上版本支持
+ */
+export interface RequestSuccessCallbackResult {
+    data: string | AnyObject | ArrayBuffer;
+    cookies: string [];
+    header: any;
+    statusCode: number;
+}
+
+/**
+ * 请求失败回调或者请求完成回调
+ * + `1.7.0` 及以上版本支持
+ */
+export interface GeneralCallbackResult {
+    errMsg: string;
+}
+
+/**
+ * 请求任务
+ * + `1.7.0` 及以上版本支持
+ */
+export interface RequestTask {
+    /**
+     * 中断请求任务
+     * @example
+     * ```javascript
+     * const task = request({
+     *   url: 'https://test.com',
+     *  success: (response) => {
+     *    console.log(response);
+     * }
+     * });
+     * task.abort();
+     * ```
+     */
+    abort: () => void;
+    /**
+     * 监听 HTTP Response Header 事件 
+     * @param callback - 回调函数
+     * @returns
+     * + `1.7.0` 及以上版本支持
+     * + 仅 `微信小程序` 平台支持，[文档](https://developers.weixin.qq.com/miniprogram/dev/api/RequestTask.onHeadersReceived.html)
+     * @example
+     * ```javascript
+     * request({
+     *    url: 'https://test.com',
+     *   success: (response) => {
+     *      console.log(response);
+     *  }
+     * }).onHeadersReceived((response) => {
+     *   console.log(response);
+     * });
+     * ```
+     */
+    onHeadersReceived?: (callback: (result: GeneralCallbackResult) => void) => void;
+    /**
+     * 取消监听 HTTP Response Header 事件 
+     * @param callback - 回调函数
+     * @returns
+     * + `1.7.0` 及以上版本支持 
+     * + 仅 `微信小程序` 平台支持，[文档](https://developers.weixin.qq.com/miniprogram/dev/api/RequestTask.offHeadersReceived.html)
+     * @example
+     * ```javascript
+     * request({
+     *   url: 'https://test.com',
+     *  success: (response) => {
+     *    console.log(response);
+     * }
+     * }).onHeadersReceived((response) => {
+     *  console.log(response);
+     * }).offHeadersReceived((response) => {
+     * console.log(response);
+     * });
+     * ```
+     */
+    offHeadersReceived?: (callback: (result: GeneralCallbackResult) => void) => void;
 }

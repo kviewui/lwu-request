@@ -16,6 +16,13 @@ export const useConfig = (config: Config) => {
          */
         debug: config.debug ?? false,
         /**
+         * 运行环境，有效值：`'h5'`、`'uniapp'`，默认为 `'uniapp'`
+         * + `h5`: 运行在浏览器环境，使用 [`XMLHttpRequest`](https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest) 发送请求
+         * + `uniapp`: 运行在uniapp环境，使用 [`uni.request`](https://uniapp.dcloud.net.cn/api/request/request.html) 发送请求
+         * + `1.7.0` 及以上版本支持
+         */
+        env: config.env ?? 'uniapp',
+        /**
          * 请求过程是否显示loading
          */
         loading: config.loading ?? true,
@@ -42,7 +49,7 @@ export const useConfig = (config: Config) => {
         /**
          * 请求超时时间，单位`ms`
          */
-        timeout: config.timeout ?? 6000,
+        timeout: config.timeout ?? 60 * 1000,
         /**
          * 请求方式，有效值：`'GET'`、`'POST'`、`'PUT'`、`'DELETE'`、`'CONNECT'`、`'HEAD'`、`'OPTIONS'`、`'TRACE'`
          */
@@ -203,70 +210,70 @@ export const useReqConfig = (config: RequestOptions) => {
         /**
          * 请求任务ID，一般在过滤重复请求，中止请求时使用
          */
-        task_id: config.task_id ?? '',
+        task_id: config?.task_id ?? '',
         /**
          * 自定义请求前拦截
          */
-        before: config.before,
+        before: config?.before,
         /**
          * 自定义请求后拦截
          */
-        after: config.after,
+        after: config?.after,
         /**
          * 自定义请求头
          */
-        header: config.header,
+        header: config?.header,
         /**
          * 请求方式
          */
-        method: config.method ?? 'GET',
+        method: config?.method ?? 'GET',
         /**
          * 请求超时时间
          */
-        timeout: config.timeout ?? 6000,
+        timeout: config?.timeout ?? 6000,
         /**
          * 如果设为 json，会对返回的数据进行一次 JSON.parse，非 json 不会进行 JSON.parse
          */
-        dataType: config.dataType ?? 'json',
+        dataType: config?.dataType ?? 'json',
         /**
          * 设置响应的数据类型。合法值：`text`、`arraybuffer`
          */
-        responseType: config.responseType ?? 'text',
+        responseType: config?.responseType ?? 'text',
         /**
          * 验证 ssl 证书
          */
-        sslVerify: config.sslVerify || false,
+        sslVerify: config?.sslVerify || false,
         /**
          * 跨域请求时是否携带凭证（cookies）
          */
-        withCredentials: config.withCredentials || false,
+        withCredentials: config?.withCredentials || false,
         /**
          * DNS解析时优先使用ipv4
          */
-        firstIpv4: config.firstIpv4 || false,
+        firstIpv4: config?.firstIpv4 || false,
         /**
          * 请求失败自动重试次数
          */
-        retryCount: config.retryCount ?? 3,
+        retryCount: config?.retryCount ?? 3,
         /**
          * 请求过程是否显示loading
          * + `1.3.0` 及以上版本支持
          */
-        loading: config.loading || true,
+        loading: config?.loading || true,
         /**
          * 请求中loading弹窗的提示文本
          * + `1.3.0` 及以上版本支持
          */
-        loadingText: config.loadingText ?? '请求中...',
+        loadingText: config?.loadingText ?? '请求中...',
         /**
          * 自定义请求域名，用于设置单次请求的域名地址，常用于上传下载场景。
          * + `1.4.10` 及以上版本支持
          */
-        domain: config.domain ?? '',
+        domain: config?.domain ?? '',
         /**
          * 是否自动携带token，默认为 `true`
          * + `1.6.3` 及以上版本支持
          */
-        autoTakeToken: config.autoTakeToken || true
+        autoTakeToken: config?.autoTakeToken || true
     }
 };

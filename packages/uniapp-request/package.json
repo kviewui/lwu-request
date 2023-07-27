@@ -1,6 +1,6 @@
 {
   "name": "lwu-request",
-  "version": "1.6.5",
+  "version": "1.7.0",
   "description": "基于uniapp网络请求API封装的轻量级网络请求库，支持自动刷新token，请求拦截，请求中断，自动重试等特性",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -27,7 +27,8 @@
   },
   "devDependencies": {
     "@dcloudio/types": "^3.2.11",
-    "@types/node": "^18.15.8"
+    "@types/node": "^18.15.8",
+    "@types/wechat-miniprogram": "^3.4.1"
   },
   "homepage": "https://lwur.fdproxy.cn",
   "repository": {

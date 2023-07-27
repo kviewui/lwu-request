@@ -14,6 +14,14 @@ export interface Config {
      */
     debug?: boolean;
     /**
+     * 运行环境，有效值：`'h5'`、`'uniapp'`、`'mp-weixin'`，默认为 `'uniapp'`
+     * + `h5`: 运行在浏览器环境，使用 [`XMLHttpRequest`](https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest) 发送请求
+     * + `uniapp`: 运行在uniapp环境，使用 [`uni.request`](https://uniapp.dcloud.net.cn/api/request/request.html) 发送请求
+     * + `mp-weixin`: 运行在微信小程序环境，使用 [`wx.request`](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/wx.request.html) 发送请求
+     * + `1.7.0` 及以上版本支持
+     */
+    env?: 'h5' | 'uniapp' | 'mp-weixin';
+    /**
      * 请求过程是否显示loading
      */
     loading?: boolean;
@@ -48,11 +56,11 @@ export interface Config {
     /**
      * 如果设为 json，会对返回的数据进行一次 JSON.parse，非 json 不会进行 JSON.parse
      */
-    dataType?: string;
+    dataType?: string | 'json' | '其他';
     /**
      * 设置响应的数据类型。合法值：`text`、`arraybuffer`
      */
-    responseType?: string;
+    responseType?: string | 'text' | 'arraybuffer';
     /**
      * 验证 ssl 证书
      */
@@ -180,7 +188,7 @@ export interface Config {
     /**
      * `loading` 动画请求多久后开始展示，单位毫秒
      * + 仅支持请求库默认动画
-     * + `1.6.0` 及以上版本支持
+     * + `1.7.0` 及以上版本支持
      */
     loadingStartTime?: number;
 }

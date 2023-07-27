@@ -1,7 +1,8 @@
 import { loading, useConfig, interceptor, useReqConfig } from './utils';
 // import qs from 'qs';
-import type { Config, RequestOptions, DownloadParams, UploadParams, DownloadSuccessResultCallback, UploadAliossOptions } from './types';
+import type { Config, RequestOptions, DownloadParams, UploadParams, DownloadSuccessResultCallback, UploadAliossOptions, RequestTask, RequestSuccessCallbackResult, GeneralCallbackResult } from './types';
 import UploadAlioss from './utils/alioss';
+import createRequest from './runtime';
 
 interface MultiOptions extends Config { };
 interface MultiOptions extends RequestOptions { };
@@ -47,7 +48,7 @@ export class Http {
   /**
    * 当前请求任务
    */
-  private currentRequestTask: UniApp.RequestTask = {
+  private currentRequestTask: RequestTask = {
     abort: () => { },
     onHeadersReceived: () => { },
     offHeadersReceived: () => { }
@@ -235,7 +236,7 @@ export class Http {
 
   public request(url: string, data: any = {}, options: RequestOptions, callback: any = null) {
     let multiOptions = {
-      autoTakeToken: options.autoTakeToken || useReqConfig(options).autoTakeToken,
+      autoTakeToken: options?.autoTakeToken || useReqConfig(options)?.autoTakeToken,
       ...this.reqConfig,
       ...options
     };
@@ -292,7 +293,7 @@ export class Http {
           });
 
           // 发起请求
-          this.currentRequestTask = uni.request({
+          this.currentRequestTask = createRequest({
             url: url,
             data: data,
             // header: reqHeader.header,
@@ -301,12 +302,12 @@ export class Http {
             },
             method: multiOptions.method as any,
             timeout: multiOptions.timeout,
-            dataType: multiOptions.dataType,
-            responseType: multiOptions.responseType,
+            dataType: multiOptions.dataType as 'json' | '其他',
+            responseType: multiOptions.responseType as 'text' | 'arraybuffer',
             sslVerify: multiOptions.sslVerify,
             withCredentials: multiOptions.withCredentials,
             firstIpv4: multiOptions.firstIpv4,
-            success: (res: UniApp.RequestSuccessCallbackResult) => {
+            success: (res: RequestSuccessCallbackResult) => {
               chain.response(res);
 
               if (typeof this.globalConfig.xhrCode === 'undefined') {
@@ -348,7 +349,7 @@ export class Http {
                 }
               }
             },
-            fail: (err: UniApp.GeneralCallbackResult) => {
+            fail: (err: GeneralCallbackResult) => {
               chain.fail(err);
               this.retryCount = multiOptions.retryCount ?? 3;
 
@@ -368,7 +369,7 @@ export class Http {
               chain.complete(res);
               // uni.removeInterceptor('request');
             }
-          });
+          }, this.globalConfig.env);
 
           let taskId = multiOptions?.task_id ?? '';
           if (this.globalConfig.taskIdValue) {
@@ -378,7 +379,7 @@ export class Http {
           // 判断是否设置请求队列ID
           if (taskId) {
             // 当前请求存入缓存
-            let tasks: UniApp.RequestTask[] = [];
+            let tasks: RequestTask[] = [];
             tasks[taskId as any] = this.currentRequestTask;
             uni.setStorageSync(this.requestTasksName, tasks);
           }

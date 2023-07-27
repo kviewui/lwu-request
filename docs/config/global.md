@@ -32,6 +32,16 @@ outline: deep
 + **是否必填**: 否
 + **描述**：调试模式，开启后会显示内部调试打印信息
 
+## env
++ **类型**：`'h5' | 'uniapp' | 'mp-weixin'`
++ **默认值**：`uniapp`
++ **是否必填**：否
++ **描述**：运行环境，有效值：`'h5'`、`'uniapp'`、`'mp-weixin'`，默认为 `'uniapp'`
+    + `h5`: 运行在浏览器环境，使用 [`XMLHttpRequest`](https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest) 发送请求
+    + `uniapp`: 运行在uniapp环境，使用 [`uni.request`](https://uniapp.dcloud.net.cn/api/request/request.html) 发送请求
+    + `mp-weixin`: 运行在微信小程序环境，使用 [`wx.request`](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/wx.request.html) 发送请求
+    + `1.7.0` 及以上版本支持
+
 ## loading
 + **类型**：`boolean`
 + **默认值**: `true`
@@ -268,6 +278,23 @@ buildQueryString: (params?: object) => {
 + **描述**: 自定义请求前拦截。
     + `1.3.12` 及以上版本支持。
     + `1.5.0` 及以上版本增加返回结果。[返回结果定义](/ts/interceptor.html#before-请求前拦截返回类型定义)
+    ::: danger 提示
+    + `1.7.0` 及以上版本使用时需要增加 `return` 结果，示例代码：
+    ```ts
+    import { Http, type BeforeRequestCallbackResult } from 'lwu-request';
+
+    const http = new Http({
+        baseUrl: {
+            dev: '',
+            pro: ''
+        },
+        before: (res: BeforeRequestCallbackResult) => {
+            // 对返回值做一些操作，比如在 header 里面增加自定义校验字段等场景
+            return res;
+        }
+    });
+    ```
+    :::
 
 ## after
 + **类型**: `Function`
@@ -276,6 +303,23 @@ buildQueryString: (params?: object) => {
 + **描述**: 自定义请求后拦截。
     + `1.3.12` 及以上版本支持。
     + `1.4.13` 及以上版本增加返回结果。[返回结果定义](/ts/interceptor.html#after-请求后拦截返回类型定义)
+    ::: danger 提示
+    + `1.7.0` 及以上版本使用时需要增加 `return` 结果，示例代码：
+    ```ts
+    import { Http, type AfterRequestCallbackResult } from 'lwu-request';
+    
+    const http = new Http({
+        baseUrl: {
+            dev: '',
+            pro: ''
+        },
+        after: (res: AfterRequestCallbackResult) => {
+            // 对返回值做一些操作，比如对返回内容做二次转化解析等
+            return res;
+        }
+    });
+    ```
+    :::
 
 ## loadingStartTime
 + **类型**: `number`
@@ -299,6 +343,7 @@ ___
 ## timeout
 + **类型**：`number`
 + **默认值**: `6000`
+    + `1.7.0` 及以上版本默认值调整为 `60 * 1000`
 + **是否必填**: 否
 + **描述**：请求超时时间
 
@@ -355,6 +400,14 @@ ___
      * 调试模式，开启后控制台会显示内部调试打印信息
      */
     debug: false,
+    /**
+     * 运行环境，有效值：`'h5'`、`'uniapp'`、`'mp-weixin'`，默认为 `'uniapp'`
+     * + `h5`: 运行在浏览器环境，使用 [`XMLHttpRequest`](https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest) 发送请求
+     * + `uniapp`: 运行在uniapp环境，使用 [`uni.request`](https://uniapp.dcloud.net.cn/api/request/request.html) 发送请求
+     * + `mp-weixin`: 运行在微信小程序环境，使用 [`wx.request`](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/wx.request.html) 发送请求
+     * + `1.7.0` 及以上版本支持
+     */
+    env: 'uniapp',
 	/**
      * 请求过程是否显示loading
      */
@@ -526,6 +579,12 @@ ___
 	/**
      * 请求失败执行重试时间上限（指数退避算法需要），达到上限后不再重试
      */
-    retryDeadline: 10000
+    retryDeadline: 10000,
+    /**
+     * `loading` 动画请求多久后开始展示，单位毫秒，默认值 0
+     * + 仅支持请求库默认动画
+     * + `1.7.0` 及以上版本支持
+     */
+    loadingStartTime: 0;
 }
 ```

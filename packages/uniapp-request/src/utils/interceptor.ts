@@ -23,6 +23,8 @@ interface Params extends RequestOptions {
 };
 
 export function interceptor(chain: any, params: Params, config: Config) {
+    let timer: string | number | NodeJS.Timeout | undefined;
+
     /**
      * 请求失败的错误统一处理
      * @param code - 错误码
@@ -54,7 +56,9 @@ export function interceptor(chain: any, params: Params, config: Config) {
         const loadingText = params.loadingText ?? config.loadingText;
 
         if (isLoading) {
-            loading({ title: loadingText ?? '请求中...' });
+            timer = setTimeout(() => {
+                loading({ title: loadingText ?? '请求中...' });
+            }, config.loadingStartTime);
         }
 
         if (options?.header?.contentType) {
@@ -83,7 +87,7 @@ export function interceptor(chain: any, params: Params, config: Config) {
                 ? config.buildQueryString(options.data as object)
                 // : new URLSearchParams(Object.entries(args.data)).toString();
                 : objToQueryString(options.data as object);
-            options.url = `${reqUrl}?${options.data}`;
+            options.url = `${reqUrl}${options.data ? `?${options.data}` : ''}`;
         } else {
             options.url = reqUrl;
         }
@@ -91,13 +95,16 @@ export function interceptor(chain: any, params: Params, config: Config) {
         // 请求前自定义拦截
         // params.before && params.before();
         if (params.before) {
-            params.before(options);
+            options = params.before(options);
         }
 
         return chain.request(options);
     };
 
     const success = (response: UniApp.RequestSuccessCallbackResult) => {
+        if (timer) {
+            clearTimeout(timer as number);
+        }
         handleError(response.statusCode, (response.data as AnyObject)[config.requestSuccessResponseMsgName as string]);
 
         // config.apiErrorInterception && config.apiErrorInterception(response.data, response);
@@ -107,13 +114,16 @@ export function interceptor(chain: any, params: Params, config: Config) {
         }
 
         if (params.after) {
-            params.after(response);
+            response = params.after(response);
         }
 
         return response;
     };
 
     const fail = (err: UniApp.GeneralCallbackResult) => {
+        if (timer) {
+            clearTimeout(timer as number);
+        }
         if (err.errMsg === 'request:fail') {
             // 客户端断网
             handleError(CONNECT_ERROR_CODE, err.errMsg);
@@ -130,6 +140,9 @@ export function interceptor(chain: any, params: Params, config: Config) {
     };
 
     const complete = (res: UniApp.GeneralCallbackResult) => {
+        if (timer) {
+            clearTimeout(timer as number);
+        }
         uni.hideLoading();
         if (res.errMsg === 'request:fail') {
             config.networkExceptionHandle && config.networkExceptionHandle();

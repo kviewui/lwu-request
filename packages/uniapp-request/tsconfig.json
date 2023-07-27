@@ -14,8 +14,9 @@
         "outDir": "dist",
         "types": [
             "@dcloudio/types",
-            "node"
-        ],
+            "node",
+            "@types/wechat-miniprogram"
+        ]
     },
     "include": [
         "src/**/*.ts",
@@ -29,7 +30,8 @@
             "module": "CommonJS",
             "types": [
                 "@dcloudio/types",
-                "node"
+                "node",
+                "@types/wechat-miniprogram"
             ]
         }
     }
