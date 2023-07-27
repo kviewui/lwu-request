@@ -14,6 +14,14 @@ interface Config {
      */
     debug?: boolean;
     /**
+     * 运行环境，有效值：`'h5'`、`'uniapp'`、`'mp-weixin'`，默认为 `'uniapp'`
+     * + `h5`: 运行在浏览器环境，使用 [`XMLHttpRequest`](https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest) 发送请求
+     * + `uniapp`: 运行在uniapp环境，使用 [`uni.request`](https://uniapp.dcloud.net.cn/api/request/request.html) 发送请求
+     * + `mp-weixin`: 运行在微信小程序环境，使用 [`wx.request`](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/wx.request.html) 发送请求
+     * + `1.7.0` 及以上版本支持
+     */
+    env?: 'h5' | 'uniapp' | 'mp-weixin';
+    /**
      * 请求过程是否显示loading
      */
     loading?: boolean;
@@ -47,11 +55,11 @@ interface Config {
     /**
      * 如果设为 json，会对返回的数据进行一次 JSON.parse，非 json 不会进行 JSON.parse
      */
-    dataType?: string;
+    dataType?: string | 'json' | '其他';
     /**
      * 设置响应的数据类型。合法值：`text`、`arraybuffer`
      */
-    responseType?: string;
+    responseType?: string | 'text' | 'arraybuffer';
     /**
      * 验证 ssl 证书
      */
@@ -176,6 +184,12 @@ interface Config {
      * 请求失败执行重试时间上限（指数退避算法需要），达到上限后不再重试
      */
     retryDeadline?: number;
+    /**
+     * `loading` 动画请求多久后开始展示，单位毫秒
+     * + 仅支持请求库默认动画
+     * + `1.7.0` 及以上版本支持
+     */
+    loadingStartTime?: number;
 }
 
 type Method = "GET" | "OPTIONS" | "HEAD" | "POST" | "PUT" | "DELETE" | "TRACE" | "CONNECT";
@@ -207,11 +221,11 @@ interface RequestOptions {
     /**
      * 如果设为 json，会对返回的数据进行一次 JSON.parse，非 json 不会进行 JSON.parse
      */
-    dataType?: string;
+    dataType?: string | 'json' | '其他';
     /**
      * 设置响应的数据类型。合法值：`text`、`arraybuffer`
      */
-    responseType?: string;
+    responseType?: string | 'text' | 'arraybuffer';
     /**
      * 验证 ssl 证书
      */
@@ -249,18 +263,101 @@ interface RequestOptions {
      */
     autoTakeToken?: boolean;
 }
+/**
+ * 请求前回调
+ */
 interface BeforeRequestCallbackResult {
     data?: any;
     header?: any;
     method?: Method;
     url?: string;
 }
+/**
+ * 请求后回调
+ */
 interface AfterRequestCallbackResult {
     data?: any;
     cookie?: any;
     errMsg?: string;
     header?: any;
     statusCode?: number;
+}
+/**
+ * 请求成功回调
+ * + `1.7.0` 及以上版本支持
+ */
+interface RequestSuccessCallbackResult {
+    data: string | AnyObject | ArrayBuffer;
+    cookies: string[];
+    header: any;
+    statusCode: number;
+}
+/**
+ * 请求失败回调或者请求完成回调
+ * + `1.7.0` 及以上版本支持
+ */
+interface GeneralCallbackResult {
+    errMsg: string;
+}
+/**
+ * 请求任务
+ * + `1.7.0` 及以上版本支持
+ */
+interface RequestTask {
+    /**
+     * 中断请求任务
+     * @example
+     * ```javascript
+     * const task = request({
+     *   url: 'https://test.com',
+     *  success: (response) => {
+     *    console.log(response);
+     * }
+     * });
+     * task.abort();
+     * ```
+     */
+    abort: () => void;
+    /**
+     * 监听 HTTP Response Header 事件
+     * @param callback - 回调函数
+     * @returns
+     * + `1.7.0` 及以上版本支持
+     * + 仅 `微信小程序` 平台支持，[文档](https://developers.weixin.qq.com/miniprogram/dev/api/RequestTask.onHeadersReceived.html)
+     * @example
+     * ```javascript
+     * request({
+     *    url: 'https://test.com',
+     *   success: (response) => {
+     *      console.log(response);
+     *  }
+     * }).onHeadersReceived((response) => {
+     *   console.log(response);
+     * });
+     * ```
+     */
+    onHeadersReceived?: (callback: (result: GeneralCallbackResult) => void) => void;
+    /**
+     * 取消监听 HTTP Response Header 事件
+     * @param callback - 回调函数
+     * @returns
+     * + `1.7.0` 及以上版本支持
+     * + 仅 `微信小程序` 平台支持，[文档](https://developers.weixin.qq.com/miniprogram/dev/api/RequestTask.offHeadersReceived.html)
+     * @example
+     * ```javascript
+     * request({
+     *   url: 'https://test.com',
+     *  success: (response) => {
+     *    console.log(response);
+     * }
+     * }).onHeadersReceived((response) => {
+     *  console.log(response);
+     * }).offHeadersReceived((response) => {
+     * console.log(response);
+     * });
+     * ```
+     */
+    offHeadersReceived?: (callback: (result: GeneralCallbackResult) => void) => void;
 }
 
 /**
@@ -440,6 +537,8 @@ interface UploadAliossOptions {
     getSignature: (policyBase64: string, accessKeySecret: string) => Promise<string>;
 }
 
+type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'HEAD' | 'TRACE' | 'CONNECT';
+
 /**
  * 网络请求库封装
  * @public
@@ -537,7 +636,10 @@ declare class Http {
         data?: {
             uploadTask: any;
             url: string;
-            path: string;
+            path: string; /**
+             * API错误拦截处理程序，请根据业务实际情况灵活设置
+             * @param data
+             */
         } | undefined;
         msg: string;
     }>;
@@ -548,4 +650,4 @@ declare class Http {
     uploadAlioss(options: UploadAliossOptions): void;
 }
 
-export { AfterRequestCallbackResult, BeforeRequestCallbackResult, Config, DownloadParams, DownloadSuccessResultCallback, Files, GetOSSBySTSSuccessCallback, Http, RequestOptions, UploadAliossOptions, UploadParams };
+export { AfterRequestCallbackResult, BeforeRequestCallbackResult, Config, DownloadParams, DownloadSuccessResultCallback, Files, GeneralCallbackResult, GetOSSBySTSSuccessCallback, Http, RequestMethod, RequestOptions, RequestSuccessCallbackResult, RequestTask, UploadAliossOptions, UploadParams };
