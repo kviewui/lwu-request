@@ -16,6 +16,7 @@
     "vitepress": "^1.0.0-beta.1"
   },
   "dependencies": {
-    "@kviewui/css": "^1.0.0"
+    "@kviewui/css": "^1.0.0",
+    "vitepress-markdown-timeline": "^1.2.1"
   }
 }

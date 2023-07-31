@@ -1,4 +1,6 @@
 import { defineConfig } from 'vitepress'
+import timeline from 'vitepress-markdown-timeline';
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   lang: 'zh-CN',
@@ -87,6 +89,11 @@ export default defineConfig({
     footer: {
       copyright: 'Copyright © 2023-present KviewUI',
       message: '本文档内容版权为 Lwu-Request 官方团队所有，保留所有权利。'
+    }
+  },
+  markdown: {
+    config: (md) => {
+      md.use(timeline);
     }
   }
 })
