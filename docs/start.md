@@ -58,6 +58,9 @@ const request = new Http({
 			pro: 'api.test.com'
 		}
 	});
+
+	// 请求库类型导出，方便后面的 API 模块调用
+	export type * from 'lwu-request';
 	```
 + ### 调用示例，提供`直接调用`和`API调用`两种方式，大家可以自由选择
 	+ #### main.ts直接调用
