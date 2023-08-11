@@ -72,5 +72,11 @@ interface RequestOptions {
      * + `1.6.3` 及以上版本支持
      */
     autoTakeToken?: boolean;
+    /**
+     * 是否返回请求原始响应内容，默认为 `false`
+     * + 为 `true` 时，返回的响应内容为平台请求API返回的原始响应内容，包含响应头、响应状态码等信息
+     * + `1.8.0` 及以上版本支持
+     */
+    originalResponse?: boolean;
 };
 ```

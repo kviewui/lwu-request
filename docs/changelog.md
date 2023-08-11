@@ -1,6 +1,10 @@
 # 更新日志
 ---
 
+::: timeline 1.8.0  (2023-08-11)
++ 新增 `originalResponse` 请求配置项。[详情](/config/request.html#originalresponse)
+:::
+
 ::: timeline 1.7.0 (2023-07-27)
 <!-- ## 1.7.0  (2023-07-27) -->
 + 新增 `env` 运行环境配置项，支持 `原生h5` 运行环境和 `原生微信小程序` 运行环境。[详情](/config/global.html#env)

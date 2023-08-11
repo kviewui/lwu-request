@@ -335,7 +335,7 @@ export class Http {
               }
 
               if (tokenExpiredCode !== this.globalConfig.tokenExpiredCode) {
-                resolve(res.data);
+                resolve(options.originalResponse ? res : res.data);
               } else {
                 // 刷新token
                 this.globalConfig.debug && console.warn(`【LwuRequest Debug】token失效，开始执行刷新token程序`);
