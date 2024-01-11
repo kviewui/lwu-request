@@ -1,3 +1,6 @@
+## 1.8.1  (2024-01-11)
++ 优化 `loading` 为 `false` 时微信开发者控制台报错问题。
+
 ## 1.8.0  (2023-08-11)
 + 新增 `originalResponse` 请求配置项。[详情](https://lwur.fdproxy.cn/config/request.html#originalresponse)
 

@@ -143,7 +143,12 @@ export function interceptor(chain: any, params: Params, config: Config) {
         if (timer) {
             clearTimeout(timer as number);
         }
-        uni.hideLoading();
+
+        const isLoading = params.loading ?? config.loading;
+        if (isLoading) {
+            uni.hideLoading();
+        }
+        
         if (res.errMsg === 'request:fail') {
             config.networkExceptionHandle && config.networkExceptionHandle();
         }
