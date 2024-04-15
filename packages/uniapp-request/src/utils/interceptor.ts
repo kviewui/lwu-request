@@ -28,13 +28,13 @@ export function interceptor(chain: any, params: Params, config: Config) {
     /**
      * 请求失败的错误统一处理
      * @param code - 错误码
-     * @param message - 自定义错误信息 
+     * @param message - 自定义错误信息
      */
-    const handleError = (code: number, message: string = ''): void => {
+    const handleError = (code: number, message: string = '', reject?: (reason?: any) => void): void => {
         /**
          * 调用错误状态码处理程序
          */
-        config.errorHandleByCode && config.errorHandleByCode(code, message);
+        config.errorHandleByCode && config.errorHandleByCode(code, message, reject);
         // if (code === CONNECT_ERROR_CODE) {
         //     // 客户端断网处理
         //     if (config.networkExceptionHandle) {
@@ -46,7 +46,7 @@ export function interceptor(chain: any, params: Params, config: Config) {
         // }
     }
 
-    const invoke = (options: { header: { [x: string]: any; contentType?: any; }; method: string; data: string | object; url: string; }) => {
+    const invoke = (options: { header: { [x: string]: any; contentType?: any; }; method: string; data: string | object; url: string; }, reject?: (reason?: any) => void) => {
         // 请求前拦截处理
         if (config.debug) {
             console.warn(`【LwuRequest Debug】请求拦截:${JSON.stringify(options)}`);
@@ -94,14 +94,14 @@ export function interceptor(chain: any, params: Params, config: Config) {
 
         // 请求前自定义拦截
         // params.before && params.before();
-        if (params.before) {
-            options = params.before(options);
+        if (params.before && params.before(options)) {
+            options = params.before(options, reject);
         }
 
         return chain.request(options);
     };
 
-    const success = (response: UniApp.RequestSuccessCallbackResult) => {
+    const success = (response: UniApp.RequestSuccessCallbackResult, reject?: (reason?: any) => void) => {
         if (timer) {
             clearTimeout(timer as number);
         }
@@ -114,7 +114,7 @@ export function interceptor(chain: any, params: Params, config: Config) {
         }
 
         if (params.after) {
-            response = params.after(response);
+            response = params.after(response, reject);
         }
 
         return response;
@@ -148,7 +148,7 @@ export function interceptor(chain: any, params: Params, config: Config) {
         if (isLoading) {
             uni.hideLoading();
         }
-        
+
         if (res.errMsg === 'request:fail') {
             config.networkExceptionHandle && config.networkExceptionHandle();
         }

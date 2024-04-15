@@ -32,11 +32,13 @@ interface Config {
     /**
      * 自定义请求前拦截
      * + `1.3.12` 及以上版本支持。
+     * + reject 参数需要 `v1.8.2` 及以后版本支持
      */
     before?: Function;
     /**
      * 自定义请求后拦截
      * + `1.3.12` 及以上版本支持。
+     * + reject 参数需要 `v1.8.2` 及以后版本支持
      */
     after?: Function;
     /**
@@ -74,17 +76,20 @@ interface Config {
     firstIpv4?: boolean;
     /**
      * 网络错误代码拦截处理程序，请根据业务实际情况灵活设置
+     * + reject 参数需要 `v1.8.2` 及以后版本支持
+     *
      * @param code http网络状态码，其中 `404` 为请求地址未找到、`408` 为请求超时、`1009` 为客户端网络不可用
      * @param errMsg
      * @returns
      */
-    errorHandleByCode?: (code: number, errMsg?: string) => void;
+    errorHandleByCode?: (code: number, errMsg?: string, reject?: (reason?: any) => void) => void;
     /**
      * API错误拦截处理程序，请根据业务实际情况灵活设置
+     * + reject 参数需要 `v1.8.2` 及以后版本支持
      * @param data API返回内容
      * @param args uniapp请求API回调结果
      */
-    apiErrorInterception?: (data: any, args?: UniApp.RequestSuccessCallbackResult) => void;
+    apiErrorInterception?: (data: any, args?: UniApp.RequestSuccessCallbackResult, reject?: (reason?: any) => void) => void;
     /**
      * API成功状态码
      * + `1.2.0` 及以上版本支持
@@ -200,10 +205,12 @@ interface RequestOptions {
     task_id?: string;
     /**
      * 自定义请求前拦截
+     * + reject 参数需要 `v1.8.2` 及以后版本支持
      */
     before?: Function;
     /**
      * 自定义请求后拦截
+     * + reject 参数需要 `v1.8.2` 及以后版本支持
      */
     after?: Function;
     /**
@@ -642,10 +649,7 @@ declare class Http {
         data?: {
             uploadTask: any;
             url: string;
-            path: string; /**
-             * API错误拦截处理程序，请根据业务实际情况灵活设置
-             * @param data
-             */
+            path: string;
         } | undefined;
         msg: string;
     }>;

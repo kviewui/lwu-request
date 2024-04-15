@@ -55,11 +55,12 @@ outline: deep
 + **描述**：请求中loading弹窗的提示文本
 
 ## errorHandleByCode
-+ **类型**: `(code: number, errMsg?: string) => {}`
-+ **默认值**: `(code: number, errMsg?: string) => {}`
++ **类型**: `(code: number, errMsg?: string, reject?: (reason?: any) => void) => {}`
++ **默认值**: `(code: number, errMsg?: string, reject?: (reason?: any) => void) => {}`
 + **是否必填**: 否
 + **描述**: 业务错误代码拦截处理程序，请根据业务实际情况灵活设置
     + `code` 参数为http网络状态码，其中 `404` 为请求地址未找到、`408` 为请求超时、`1009` 为客户端网络不可用
+    + `reject` 参数可以自定义抛出异常，需要 `v1.8.2` 及以上版本支持
 + **示例**: 
 ```ts
 errorHandleByCode: (code: number, errMsg?: string) => {
@@ -94,12 +95,13 @@ errorHandleByCode: (code: number, errMsg?: string) => {
 ```
 
 ## apiErrorInterception
-+ **类型**: `(data: any, args?: UniApp.RequestSuccessCallbackResult) => {}`
-+ **默认值**: `(data: any, args?: UniApp.RequestSuccessCallbackResult) => {}`
++ **类型**: `(data: any, args?: UniApp.RequestSuccessCallbackResult, reject?: (reason?: any) => void) => {}`
++ **默认值**: `(data: any, args?: UniApp.RequestSuccessCallbackResult, reject?: (reason?: any) => void) => {}`
 + **是否必填**: 否
 + **描述**: 
     + API错误拦截处理程序，请根据业务实际情况灵活设置。
     + `1.1.0` 及以上版本支持。
+    + `reject` 参数可以自定义抛出异常，需要 `v1.8.2` 及以上版本支持
 + **示例**: 
 ```ts
 interface Data {
@@ -275,26 +277,30 @@ buildQueryString: (params?: object) => {
 + **类型**: `Function`
 + **默认值**: ` `
 + **是否必填**: 否
-+ **描述**: 自定义请求前拦截。
-    + `1.3.12` 及以上版本支持。
-    + `1.5.0` 及以上版本增加返回结果。[返回结果定义](/ts/interceptor.html#before-请求前拦截返回类型定义)
-    ::: danger 提示
-    + `1.7.0` 及以上版本使用时需要增加 `return` 结果，示例代码：
-    ```ts
-    import { Http, type BeforeRequestCallbackResult } from 'lwu-request';
+  + **描述**: 自定义请求前拦截。
+      + `1.3.12` 及以上版本支持。
+      + `1.5.0` 及以上版本增加返回结果。[返回结果定义](/ts/interceptor.html#before-请求前拦截返回类型定义)
+      
+      ::: danger 提示
+      
+      + `1.7.0` 及以上版本使用时需要增加 `return` 结果，示例代码：
+      ```ts
+      import { Http, type BeforeRequestCallbackResult } from 'lwu-request';
 
-    const http = new Http({
-        baseUrl: {
-            dev: '',
-            pro: ''
-        },
-        before: (res: BeforeRequestCallbackResult) => {
-            // 对返回值做一些操作，比如在 header 里面增加自定义校验字段等场景
-            return res;
-        }
-    });
-    ```
-    :::
+      const http = new Http({
+          baseUrl: {
+              dev: '',
+              pro: ''
+          },
+          before: (res: BeforeRequestCallbackResult) => {
+              // 对返回值做一些操作，比如在 header 里面增加自定义校验字段等场景
+              return res;
+          }
+      });
+      ```
+      + `reject` 参数可以自定义抛出异常，需要 `v1.8.2` 及以上版本支持
+    
+      :::
 
 ## after
 + **类型**: `Function`
@@ -319,6 +325,7 @@ buildQueryString: (params?: object) => {
         }
     });
     ```
+    + `reject` 参数可以自定义抛出异常，需要 `v1.8.2` 及以上版本支持
     :::
 
 ## loadingStartTime
@@ -462,18 +469,20 @@ ___
     firstIpv4: false,
 	/**
      * 业务错误代码拦截处理程序，请根据业务实际情况灵活设置
+     * + `reject` 参数可以自定义抛出异常，需要 `v1.8.2` 及以上版本支持
      * @param code 
      * @param errMsg 
      * @returns 
      */
-    errorHandleByCode: (code: number, errMsg?: string) => {},
+    errorHandleByCode: (code: number, errMsg?: string, reject?: (reason?: any) => void) => {},
     /**
      * API错误拦截处理程序，请根据业务实际情况灵活设置
      * + `1.1.0` 及以上版本支持
+     * + `reject` 参数可以自定义抛出异常，需要 `v1.8.2` 及以上版本支持
      * @param data API返回内容
      * @param args uniapp请求API回调结果
      */
-    apiErrorInterception: (data: any, args?: UniApp.RequestSuccessCallbackResult) => {},
+    apiErrorInterception: (data: any, args?: UniApp.RequestSuccessCallbackResult, reject?: (reason?: any) => void) => {},
 	/**
      * 网络异常或者断网处理程序，建议更新缓存中是否断网或者网络繁忙的标识以便前端页面展示没有网络或者断网的通用异常页面
      * @returns

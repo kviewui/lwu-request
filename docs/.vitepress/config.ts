@@ -11,8 +11,8 @@ export default defineConfig({
     nav: [
       { text: '首页', link: '/' },
       { text: '文档', link: '/intro' },
-      { 
-        text: '1.8.1',
+      {
+        text: '1.8.2',
         items: [
           {  text: '更新日志', link: 'changelog'},
           { text: '开源贡献', link: '/convention/contributing'},

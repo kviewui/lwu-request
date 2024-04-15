@@ -1,6 +1,21 @@
 # 更新日志
 ---
 
+::: timeline 1.8.2	(2024-04-15)
++ `before`, `after`, `errorHandleByCode`, `apiErrorInterception` 拦截器新增 `reject` 回调参数，方便自定义抛出异常。抛出的异常可以在请求的 `catch` 接收
+
+  这里以 `after` 拦截器为例进行演示，其他拦截器同理。
+  ```
+  // ...其他配置
+  after: (res: AfterRequestCallbackResult, reject: (arg0?: string) => void) => {
+      // 其他自定义业务逻辑
+      reject('手动抛出异常测试')
+  }
+  ```
++ 优化请求拦截器不返回内容时异常问题。
++ 
+:::
+
 ::: timeline 1.8.1	(2024-01-11)
 + 优化 `loading` 为 `false` 时微信开发者控制台报错问题。
 :::

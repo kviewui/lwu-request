@@ -92,12 +92,12 @@ export class Http {
      * @param errMsg
      * @returns
      */
-    errorHandleByCode: (code: number, errMsg?: string) => { },
+    errorHandleByCode: (code: number, errMsg?: string, reject?: (reason?: any) => void) => { },
     /**
      * API错误拦截处理程序，请根据业务实际情况灵活设置
      * @param data
      */
-    apiErrorInterception: (data: any) => { },
+    apiErrorInterception: (data: any, args?: RequestSuccessCallbackResult, reject?: (reason?: any) => void) => { },
   };
 
   /**
@@ -308,17 +308,17 @@ export class Http {
             withCredentials: multiOptions.withCredentials,
             firstIpv4: multiOptions.firstIpv4,
             success: (res: RequestSuccessCallbackResult) => {
-              chain.response(res);
+              chain.response(res, reject);
 
               if (typeof this.globalConfig.xhrCode === 'undefined') {
-                this.globalConfig.apiErrorInterception && this.globalConfig.apiErrorInterception(res.data, res);
+                this.globalConfig.apiErrorInterception && this.globalConfig.apiErrorInterception(res.data, res, reject);
               } else {
                 if (
 									this.globalConfig.xhrCodeName &&
 									(res.data as any)[this.globalConfig.xhrCodeName] !== 'undefined' &&
 									(res.data as any)[this.globalConfig.xhrCodeName] !== this.globalConfig.xhrCode
 								) {
-									this.globalConfig.apiErrorInterception && this.globalConfig.apiErrorInterception(res.data, res);
+									this.globalConfig.apiErrorInterception && this.globalConfig.apiErrorInterception(res.data, res, reject);
 									reject(res);
 								}
               }

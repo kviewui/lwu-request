@@ -7,10 +7,12 @@ export interface RequestOptions {
     task_id?: string;
     /**
      * 自定义请求前拦截
+     * + reject 参数需要 `v1.8.2` 及以后版本支持
      */
     before?: Function;
     /**
      * 自定义请求后拦截
+     * + reject 参数需要 `v1.8.2` 及以后版本支持
      */
     after?: Function;
     /**
@@ -137,7 +139,7 @@ export interface RequestTask {
      */
     abort: () => void;
     /**
-     * 监听 HTTP Response Header 事件 
+     * 监听 HTTP Response Header 事件
      * @param callback - 回调函数
      * @returns
      * + `1.7.0` 及以上版本支持
@@ -156,10 +158,10 @@ export interface RequestTask {
      */
     onHeadersReceived?: (callback: (result: GeneralCallbackResult) => void) => void;
     /**
-     * 取消监听 HTTP Response Header 事件 
+     * 取消监听 HTTP Response Header 事件
      * @param callback - 回调函数
      * @returns
-     * + `1.7.0` 及以上版本支持 
+     * + `1.7.0` 及以上版本支持
      * + 仅 `微信小程序` 平台支持，[文档](https://developers.weixin.qq.com/miniprogram/dev/api/RequestTask.offHeadersReceived.html)
      * @example
      * ```javascript
