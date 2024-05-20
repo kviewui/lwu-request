@@ -2,8 +2,8 @@
 ---
 
 ::: timeline 1.8.3  (2024-05-20)
-+ 新增 `customData` 请求配置项。[详情](/config/request.html#customdata)
-+ 新增 `-1` 状态码。[详情](/errorcode.html)
++ 新增 `customData` 请求配置项。[详情](config/request#customdata)
++ 新增 `-1` 状态码。[详情](errorcode)
 + 优化 `请求失败拦截` 逻辑，以解决 `服务器拒绝请求` 时被拦截为网络连接异常的问题。
 :::
 
