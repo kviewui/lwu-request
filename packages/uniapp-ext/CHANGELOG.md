@@ -1,14 +1,19 @@
+## 1.8.3  (2024-05-20)
++ 新增 `customData` 请求配置项。[详情](https://lwur.fdproxy.cn/config/request.html#customdata)
++ 新增 `-1` 状态码。[详情](https://lwur.fdproxy.cn/errorCode.html)
++ 优化 `请求失败拦截` 逻辑，以解决 `服务器拒绝请求` 时被拦截为网络连接异常的问题。
+
 ## 1.8.2  (2024-04-15)
 + `before`, `after`, `errorHandleByCode`, `apiErrorInterception` 拦截器新增 `reject` 回调参数，方便自定义抛出异常。抛出的异常可以在请求的 `catch` 接收
-
-  这里以 `after` 拦截器为例进行演示，其他拦截器同理。
-  ```
-  // ...其他配置
-  after: (res: AfterRequestCallbackResult, reject: (arg0?: string) => void) => {
-      // 其他自定义业务逻辑
-      reject('手动抛出异常测试')
-  }
-  ```
+	
+	这里以 `after` 拦截器为例进行演示，其他拦截器同理。
+	```
+	// ...其他配置
+	after: (res: AfterRequestCallbackResult, reject: (arg0?: string) => void) => {
+		// 其他自定义业务逻辑
+		reject('手动抛出异常测试')
+	}
+	```
 + 优化请求拦截器不返回内容时异常问题。
 
 ## 1.8.1  (2024-01-11)
