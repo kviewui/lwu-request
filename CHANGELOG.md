@@ -1,6 +1,6 @@
 ## 1.8.3  (2024-05-20)
 + 新增 `customData` 请求配置项。[详情](https://lwur.fdproxy.cn/config/request.html#customdata)
-+ 新增 `-1` 状态码。[详情](https://lwur.fdproxy.cn/errorcode.html)
++ 新增 `-1` 状态码。[详情](https://lwur.fdproxy.cn/errorCode.html)
 + 优化 `请求失败拦截` 逻辑，以解决 `服务器拒绝请求` 时被拦截为网络连接异常的问题。
 
 ## 1.8.2  (2024-04-15)
