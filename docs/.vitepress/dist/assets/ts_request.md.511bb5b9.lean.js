@@ -1,1 +1,0 @@
-import{_ as s,o as n,c as a,V as l}from"./chunks/framework.df15cb86.js";const A=JSON.parse('{"title":"请求配置","description":"","frontmatter":{},"headers":[],"relativePath":"ts/request.md","filePath":"ts/request.md"}'),p={name:"ts/request.md"},o=l("",4),t=[o];function e(c,r,y,i,D,F){return n(),a("div",null,t)}const E=s(p,[["render",e]]);export{A as __pageData,E as default};
