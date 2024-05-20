@@ -1,7 +1,7 @@
 import path from 'path';
 import type { Config, RequestOptions } from '../types';
 import { loading } from '../utils/prompt';
-import { CONNECT_ERROR_CODE, NETWORK_TIMEOUT_CODE, URL_NOT_FOUND_CODE } from './constant';
+import { CONNECT_ERROR_CODE, NETWORK_TIMEOUT_CODE, URL_NOT_FOUND_CODE, NETWORK_FAILURE_CODE } from './constant';
 
 /**
  * 对象转query string的参数字符串
@@ -46,7 +46,14 @@ export function interceptor(chain: any, params: Params, config: Config) {
         // }
     }
 
-    const invoke = (options: { header: { [x: string]: any; contentType?: any; }; method: string; data: string | object; url: string; }, reject?: (reason?: any) => void) => {
+    const invoke = (options: {
+        // method: "GET" | "OPTIONS" | "HEAD" | "POST" | "PUT" | "DELETE" | "TRACE" | "CONNECT";
+        method: string;
+        data: any;
+        header: any;
+        customData: any;
+        url: string
+    }, reject?: (reason?: any) => void) => {
         // 请求前拦截处理
         if (config.debug) {
             console.warn(`【LwuRequest Debug】请求拦截:${JSON.stringify(options)}`);
@@ -125,8 +132,19 @@ export function interceptor(chain: any, params: Params, config: Config) {
             clearTimeout(timer as number);
         }
         if (err.errMsg === 'request:fail') {
-            // 客户端断网
-            handleError(CONNECT_ERROR_CODE, err.errMsg);
+            // 获取网络状态
+            uni.getNetworkType({
+                success: (res) => {
+                    if (res.networkType === 'none') {
+                        handleError(CONNECT_ERROR_CODE, err.errMsg);
+                    } else {
+                        handleError(NETWORK_FAILURE_CODE, JSON.stringify(err));
+                    }
+                },
+                fail: () => {
+                    handleError(NETWORK_FAILURE_CODE, JSON.stringify(err));
+                }
+            })
         } else if (err.errMsg === 'request:fail timeout') {
             // 请求超时
             handleError(NETWORK_TIMEOUT_CODE, err.errMsg);

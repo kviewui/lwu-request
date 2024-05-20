@@ -288,6 +288,7 @@ export class Http {
               ...multiOptions.header
             },
             method: options?.method ?? 'GET',
+            customData: multiOptions.customData,
             data,
             url
           });
@@ -498,7 +499,8 @@ export class Http {
       header: header,
       method: 'DOWNLOAD',
       data: '',
-      url: params.url
+      url: params.url,
+      customData: {}
     });
     return uni.downloadFile({
       url: params.url,
@@ -555,7 +557,8 @@ export class Http {
       header: header,
       method: 'UPLOAD',
       data: '',
-      url: params.url
+      url: params.url,
+      customData: {}
     });
 
     return uni.uploadFile({

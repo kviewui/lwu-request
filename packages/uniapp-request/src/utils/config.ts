@@ -6,7 +6,7 @@ import type { RequestOptions } from '../types/request';
  * 获取请求配置
  * @author KviewUI <kviewui@163.com>
  * @param {Config} config - 配置信息
- * @returns 
+ * @returns
  */
 export const useConfig = (config: Config) => {
     return {
@@ -77,8 +77,8 @@ export const useConfig = (config: Config) => {
         /**
          * 业务错误代码拦截处理程序，请根据业务实际情况灵活设置
          * @param code http网络状态码，其中 `404` 为请求地址未找到、`408` 为请求超时、`1009` 为客户端网络不可用
-         * @param errMsg 
-         * @returns 
+         * @param errMsg
+         * @returns
          */
         errorHandleByCode: config.errorHandleByCode,
         /**
@@ -118,7 +118,7 @@ export const useConfig = (config: Config) => {
         /**
          * 自定义获取token处理程序，通过promise返回最新token值即可
          * + `1.0.2` 及以上版本支持
-         * @returns 
+         * @returns
          * @example
          * ```ts
          * tokenValue: () => {
@@ -134,12 +134,12 @@ export const useConfig = (config: Config) => {
         /**
          * 自定义构建URL参数方式，即用什么方式把请求的params对象数据转为`a=1&b=2`的格式，默认使用NodeJS内置对象 `URLSearchParams` 转化，可以自定义通过 `qs` 插件的方式转化
          * + `1.0.2` 及以上版本支持
-         * 
+         *
          * @example
          * ```ts
          * // qs 插件转化示例
          * import qs from 'qs';
-         * 
+         *
          * return qs.stringify(obj);
          * ```
          */
@@ -168,7 +168,7 @@ export const useConfig = (config: Config) => {
          * token失效错误代码类型，支持 `httpStatusCode` 和 `apiResponseCode`，默认为 `httpStatusCode`
          * + `httpStatusCode`: 原生http请求状态码
          * + `apiResponseCode`: 接口响应错误码
-         * 
+         *
          * + `1.5.11` 及以上版本支持
          */
         tokenExpiredCodeType: config.tokenExpiredCodeType ?? 'httpStatusCode',
@@ -203,7 +203,7 @@ export const useConfig = (config: Config) => {
 
 /**
  * 获取请求配置
- * @param config 
+ * @param config
  */
 export const useReqConfig = (config: RequestOptions) => {
     return {
@@ -280,6 +280,11 @@ export const useReqConfig = (config: RequestOptions) => {
          * + 为 `true` 时，返回的响应内容为平台请求API返回的原始响应内容，包含响应头、响应状态码等信息
          * + `1.8.0` 及以上版本支持
          */
-        originalResponse: config?.originalResponse || false
+        originalResponse: config?.originalResponse || false,
+        /**
+         * 发起请求时的自定义参数，一般在拦截器里面使用
+         * + `v1.8.3` 及以上版本支持
+         */
+        customData: config.customData ?? {}
     }
 };

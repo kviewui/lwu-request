@@ -12,7 +12,7 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '文档', link: '/intro' },
       {
-        text: '1.8.2',
+        text: '1.8.3',
         items: [
           {  text: '更新日志', link: 'changelog'},
           { text: '开源贡献', link: '/convention/contributing'},
@@ -31,6 +31,7 @@ export default defineConfig({
           { text: '介绍', link: '/intro' },
           { text: '快速上手', link: '/start' },
           { text: '进阶使用', link: '/advanced' },
+          { text: '错误码', link: '/errorCode' },
           { text: '更新日志', link: '/changelog' },
           { text: '常见问题', link: '/faq' },
           { text: '版本计划', link: '/next' }

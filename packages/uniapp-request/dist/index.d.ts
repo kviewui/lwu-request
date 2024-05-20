@@ -275,6 +275,11 @@ interface RequestOptions {
      * + `1.8.0` 及以上版本支持
      */
     originalResponse?: boolean;
+    /**
+     * 发起请求时的自定义参数，一般在拦截器里面使用
+     * + `v1.8.3` 及以上版本支持
+     */
+    customData?: any;
 }
 /**
  * 请求前回调
