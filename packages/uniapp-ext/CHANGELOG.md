@@ -1,3 +1,6 @@
+## 1.8.4  (2024-08-21)
++ `before` 拦截器支持修改请求参数。[详情](https://lwur.fdproxy.cn/config/global.html#before)
+
 ## 1.8.3  (2024-05-20)
 + 新增 `customData` 请求配置项。[详情](https://lwur.fdproxy.cn/config/request.html#customdata)
 + 新增 `-1` 状态码。[详情](https://lwur.fdproxy.cn/errorCode.html)
@@ -5,15 +8,15 @@
 
 ## 1.8.2  (2024-04-15)
 + `before`, `after`, `errorHandleByCode`, `apiErrorInterception` 拦截器新增 `reject` 回调参数，方便自定义抛出异常。抛出的异常可以在请求的 `catch` 接收
-	
-	这里以 `after` 拦截器为例进行演示，其他拦截器同理。
-	```
-	// ...其他配置
-	after: (res: AfterRequestCallbackResult, reject: (arg0?: string) => void) => {
-		// 其他自定义业务逻辑
-		reject('手动抛出异常测试')
-	}
-	```
+
+  这里以 `after` 拦截器为例进行演示，其他拦截器同理。
+  ```
+  // ...其他配置
+  after: (res: AfterRequestCallbackResult, reject: (arg0?: string) => void) => {
+      // 其他自定义业务逻辑
+      reject('手动抛出异常测试')
+  }
+  ```
 + 优化请求拦截器不返回内容时异常问题。
 
 ## 1.8.1  (2024-01-11)
@@ -148,7 +151,7 @@ apiErrorInterception: (data: Data, args?: UniApp.RequestSuccessCallbackResult) =
 + 修复因增加 `tokenValue` 属性后没有 `token` 返回时程序中断的bug，并完善携带token的配置demo。
 
 ## 1.0.2	(2023-03-28)
-+ 新增 `tokenValue` 属性，优化旧版本指定token存储key的非人性化方式，`tokenValue` 直接通过自己定义Promise返回最新token即可，示例如下：  
++ 新增 `tokenValue` 属性，优化旧版本指定token存储key的非人性化方式，`tokenValue` 直接通过自己定义Promise返回最新token即可，示例如下：
 
 ```js
 tokenVlaue: () => {
@@ -159,14 +162,14 @@ tokenVlaue: () => {
 	});
 }
 ```
-+ 新增 `buildQueryString` 属性，支持自定义构建URL参数的方式，默认使用 `NodeJS`内置对象 `URLSearchParams` 转化，可以选择 `qs` 插件方式，需要手动安装 `qs` 插件  
++ 新增 `buildQueryString` 属性，支持自定义构建URL参数的方式，默认使用 `NodeJS`内置对象 `URLSearchParams` 转化，可以选择 `qs` 插件方式，需要手动安装 `qs` 插件
 
-	```
-	// qs 插件转化示例
-	import qs from 'qs';
+  ```
+  // qs 插件转化示例
+  import qs from 'qs';
 
-	return qs.stringify(obj);
-	```
+  return qs.stringify(obj);
+  ```
 
 ## 1.0.1    (2023-03-26)
 + 优化已知问题
