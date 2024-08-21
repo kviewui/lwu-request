@@ -1,6 +1,10 @@
 # 更新日志
 ---
 
+::: timeline 1.8.4  (2024-08-21)
++ `before` 拦截器支持修改请求参数。[详情](config/global#before)
+:::
+
 ::: timeline 1.8.3  (2024-05-20)
 + 新增 `customData` 请求配置项。[详情](config/request#customdata)
 + 新增 `-1` 状态码。[详情](errorCode)

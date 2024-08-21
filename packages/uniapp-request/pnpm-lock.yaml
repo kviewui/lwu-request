@@ -1,30 +1,38 @@
-lockfileVersion: '6.0'
+lockfileVersion: '9.0'
 
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-devDependencies:
-  '@dcloudio/types':
-    specifier: ^3.2.11
-    version: 3.2.11
-  '@types/node':
-    specifier: ^18.15.8
-    version: 18.15.8
-  '@types/wechat-miniprogram':
-    specifier: ^3.4.1
-    version: 3.4.1
+importers:
+
+  .:
+    devDependencies:
+      '@dcloudio/types':
+        specifier: ^3.2.11
+        version: 3.2.11
+      '@types/node':
+        specifier: ^18.15.8
+        version: 18.15.8
+      '@types/wechat-miniprogram':
+        specifier: ^3.4.1
+        version: 3.4.1
 
 packages:
 
-  /@dcloudio/types@3.2.11:
+  '@dcloudio/types@3.2.11':
     resolution: {integrity: sha512-Ws+pUiQMvCcSjg0soF+vTTwwsdNlK/1cxIfo5LBBDFPoXfUAAh6k9HnCt5cudERNhY0M3wE7ATMx/1Cb9bmUig==}
-    dev: true
 
-  /@types/node@18.15.8:
+  '@types/node@18.15.8':
     resolution: {integrity: sha512-kzGNJZ57XEH7RdckxZ7wfRjB9hgZABF+NLgR1B2zogUvV0gmK0/60VYA4yb4oKZckPiiJlmmfpdqTfCN0VRX+Q==}
-    dev: true
 
-  /@types/wechat-miniprogram@3.4.1:
+  '@types/wechat-miniprogram@3.4.1':
     resolution: {integrity: sha512-szbuYR32VotxNQNQ4YyQ6Ob3ya0tLY0zpf/xvi6DF8Oqb+0Y+5CL5BpxS+4wBSJvlu3VfSXhjxZ0ze1a3l16Pw==}
-    dev: true
+
+snapshots:
+
+  '@dcloudio/types@3.2.11': {}
+
+  '@types/node@18.15.8': {}
+
+  '@types/wechat-miniprogram@3.4.1': {}

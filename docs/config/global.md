@@ -302,6 +302,27 @@ buildQueryString: (params?: object) => {
     
       :::
 
+      + `1.8.4` 及以上版本支持修改 `data` 请求参数。示例代码：
+      ```ts
+      import { Http, type BeforeRequestCallbackResult } from 'lwu-request';
+
+      const http = new Http({
+          baseUrl: {
+              dev: '',
+              pro: ''
+          },
+          before: (res: BeforeRequestCallbackResult) => {
+              // 对返回值做一些操作，比如在 header 里面增加自定义校验字段等场景
+              // 修改请求参数
+              res.data = {
+                 ...res.data,
+                  customField: 'customValue'
+              };
+              return res;
+          }
+      });
+      ```
+
 ## after
 + **类型**: `Function`
 + **默认值**: ` `

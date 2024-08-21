@@ -296,7 +296,10 @@ export class Http {
           // 发起请求
           this.currentRequestTask = createRequest({
             url: url,
-            data: data,
+            data: {
+              ...data,
+              ...(multiOptions as any).data || {}
+            },
             // header: reqHeader.header,
             header: {
               ...multiOptions.header
