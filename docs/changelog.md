@@ -1,6 +1,11 @@
 # 更新日志
 ---
 
+::: timeline 1.8.5  (2024-10-17)
++ 修复 `after` 拦截器自定义返回内容不生效的bug。
++ 请求配置项 `originalResponse` 新增对 `after` 拦截器的支持，如果开启，则 `after` 拦截器返回内容将会是原始请求返回内容。[详情](config/request.html#originalresponse)
+:::
+
 ::: timeline 1.8.4  (2024-08-21)
 + `before` 拦截器支持修改请求参数。[详情](config/global#before)
 :::
