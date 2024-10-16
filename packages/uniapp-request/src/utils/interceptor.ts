@@ -108,7 +108,7 @@ export function interceptor(chain: any, params: Params, config: Config) {
         return chain.request(options);
     };
 
-    const success = (response: UniApp.RequestSuccessCallbackResult, reject?: (reason?: any) => void) => {
+    const success = (response: any, reject?: (reason?: any) => void) => {
         if (timer) {
             clearTimeout(timer as number);
         }
@@ -121,7 +121,7 @@ export function interceptor(chain: any, params: Params, config: Config) {
         }
 
         if (params.after) {
-            response = params.after(response, reject);
+            response = params.after( params.originalResponse ? response : response.data, reject);
         }
 
         return response;

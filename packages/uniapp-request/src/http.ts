@@ -267,6 +267,7 @@ export class Http {
             },
             response: (response: any) => {
               return response;
+              // resolve(response);
             },
             fail: (err: any) => {
               reject(err);
@@ -312,7 +313,7 @@ export class Http {
             withCredentials: multiOptions.withCredentials,
             firstIpv4: multiOptions.firstIpv4,
             success: (res: RequestSuccessCallbackResult) => {
-              chain.response(res, reject);
+              // chain.response(res, reject);
 
               if (typeof this.globalConfig.xhrCode === 'undefined') {
                 this.globalConfig.apiErrorInterception && this.globalConfig.apiErrorInterception(res.data, res, reject);
@@ -339,7 +340,13 @@ export class Http {
               }
 
               if (tokenExpiredCode !== this.globalConfig.tokenExpiredCode) {
-                resolve(options.originalResponse ? res : res.data);
+                // resolve(options.originalResponse ? res : res.data);
+                if (this.globalConfig.after) {
+                  resolve(chain.response(res, reject));
+                } else {
+                  resolve(options.originalResponse ? res : res.data);
+                }
+                // chain.response(options.originalResponse ? res : res.data, reject);
               } else {
                 // 刷新token
                 this.globalConfig.debug && console.warn(`【LwuRequest Debug】token失效，开始执行刷新token程序`);
